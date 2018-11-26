@@ -1,0 +1,406 @@
+[
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\event_log_photo.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\event_log_photo.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\actionbar.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\actionbar.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_action_tombstone.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\usb_check.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\usb_check.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\error_dlg.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\error_dlg.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_dialog_title_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_dialog_title_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\event_log_info.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\event_log_info.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\auto_calib.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\auto_calib.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_search_view.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_search_view.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_activity_chooser_view_list_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_singlechoice_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\select_dialog_singlechoice_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\maintab.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\maintab.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\start_calibration.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\start_calibration.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_item_header.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_item_header.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\email_setup.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\email_setup.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_video.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\activity_video.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_icon.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_activity_chooser_view.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_activity_chooser_view.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_title_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\log_spectrum.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\log_spectrum.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_alert_dialog_title_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_alert_dialog_title_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\event_log.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\event_log.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_alert_dialog_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_alert_dialog_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_layout_snackbar.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_layout_snackbar.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\black_background.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\black_background.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\iso_analysis.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\iso_analysis.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\device_name.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\device_name.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_video_fragment.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\activity_video_fragment.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_time.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_template_part_time.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_media.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\id_result_row.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\id_result_row.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\map.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\map.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_menu_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_menu_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\spectrum.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\spectrum.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\database.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\database.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_big_media.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_select_dialog_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_select_dialog_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\login.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\login.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_custom.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_big_media_custom.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_radio.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_list_menu_item_radio.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\database_row.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\database_row.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\id_list_row.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\id_list_row.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_signin.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\dialog_signin.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\selector.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\selector.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_narrow_custom.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_big_media_narrow_custom.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_alert_dialog_button_bar_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_toolbar.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_mode_bar.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\id_spectrum.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\id_spectrum.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_action.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_media_action.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_chronometer.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_tooltip.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_tooltip.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_mode_close_item_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_content_include.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_screen_content_include.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_layout_tab_icon.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_layout_tab_icon.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\start_background.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\start_background.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\database_re.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\database_re.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_simple_overlay_action_mode.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_item_subheader.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_item_subheader.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\locatioin_map.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\locatioin_map.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_lines_media.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_lines_media.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_narrow.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_big_media_narrow.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_bar_up_container.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_bar_up_container.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_cancel_action.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_media_cancel_action.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera2activity.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\camera2activity.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_item_separator.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_item_separator.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\id_result_addview.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\id_result_addview.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_popup_menu_item_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_popup_menu_item_layout.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\comment_dlg.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\comment_dlg.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\support_simple_spinner_dropdown_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\support_simple_spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_search_dropdown_item_icons_2line.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_checkbox.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_list_menu_item_checkbox.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\index.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\index.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\idspectrum_result_img.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\idspectrum_result_img.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_bottom_sheet_dialog.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_bottom_sheet_dialog.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_navigation_menu.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_navigation_menu.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_simple.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_screen_simple.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_layout_tab_text.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_layout_tab_text.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_item_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\select_dialog_item_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_popup_menu_header_item_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_popup_menu_header_item_layout.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_text_input_password_icon.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_text_input_password_icon.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\database_row2.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\database_row2.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\rec.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\rec.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_bottom_navigation_item.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_bottom_navigation_item.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_layout_snackbar_include.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_layout_snackbar_include.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_expanded_menu_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_expanded_menu_layout.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_menu_item_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_menu_item_layout.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\select_dialog_multichoice_material.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\select_dialog_multichoice_material.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\device_list.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\device_list.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_action.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\08762dfdbd40543af55d1eb6efb338d3\\res\\layout\\notification_action.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\main_menu3.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\main_menu3.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_menu_item_action_area.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\e790347dd4ad1dc0a95cbc50b2242edb\\res\\layout\\design_menu_item_action_area.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\radresponder_auth.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\radresponder_auth.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\camera2activity_pictures.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\camera2activity_pictures.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\id_result.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout\\id_result.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media_custom.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\42911c8ef6cbca89a4458e61f0651352\\res\\layout\\notification_template_media_custom.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_action_menu_layout.xml",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\5c19e18d66e2fb5c66c4f9c106cbfb3d\\res\\layout\\abc_action_menu_layout.xml"
+    }
+]

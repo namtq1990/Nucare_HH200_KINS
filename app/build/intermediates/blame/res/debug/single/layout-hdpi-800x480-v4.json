@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\database_row1.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\database_row1.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\guide.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\guide.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\main.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\main.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\event_log_photo1.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\event_log_photo1.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\event_log_gallery.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\event_log_gallery.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\id_spectrum.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\id_spectrum.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\realtime.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\realtime.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\sequential_spectrum.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\sequential_spectrum.xml"
+    },
+    {
+        "merged": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\build\\intermediates\\res\\merged\\debug\\layout-hdpi-800x480-v4\\eventlog_tab.xml",
+        "source": "D:\\HH200_KinsVersion_SAM III PeakAbout III Kins (v2.0.5)\\app\\src\\main\\res\\layout-hdpi-800x480\\eventlog_tab.xml"
+    }
+]

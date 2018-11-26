@@ -1,0 +1,39 @@
+<resources>
+
+
+    <style name="AppTheme.NoActionBar"  parent="Theme.AppCompat.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:itemBackground">@drawable/menu</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="AlertDialog1"  parent="android:Theme.Holo.Dialog">
+
+        <item name="android:windowBackground">@color/BrightBlue</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="popupTheme" parent="Theme.AppCompat.CompactMenu">
+
+
+        <item name="android:textColor">#ffffff</item>
+
+    </style>
+
+    <style name="popup" parent="popupTheme">
+        <item name="android:divider">@color/menu_devider</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:itemBackground">@android:color/white</item>
+    </style>
+
+    <style name="PopupMenuListView" parent="android:Theme.Holo">
+        <item name="android:divider">#000000</item>
+        <item name="android:dividerHeight">10dp</item>
+    </style>
+
+</resources>
