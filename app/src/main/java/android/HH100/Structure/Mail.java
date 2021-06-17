@@ -141,7 +141,7 @@ public class Mail extends javax.mail.Authenticator {
 	    props.put("mail.smtp.user", _user);
 	    props.put("mail.smtp.host", _host);
 	    props.put("mail.smtp.port", _port);
-	  
+
 	    if (_debuggable) {
 	        props.put("mail.debug", "true");
 	    }
@@ -153,10 +153,13 @@ public class Mail extends javax.mail.Authenticator {
 	    	props.put("mail.smtp.starttls.enable", "true");
 		    props.put("mail.smtp.socketFactory.port", _port);   
 		    props.put("mail.smtp.socketFactory.class",  "javax.net.ssl.SSLSocketFactory");   
-		    props.put("mail.smtp.socketFactory.fallback", "false");   
-		    props.setProperty("mail.smtp.quitwait", "false");   
+		    props.put("mail.smtp.socketFactory.fallback", "false");
+			props.put("mail.smtp.auth", "true");
+			props.setProperty("mail.transport.protocol", "smtp");
+			props.setProperty("mail.smtp.quitwait", "false");
 	    }
-	    
+
+
 	   // props.put("mail.smtp.socketFactory.port", _sport);
 	   // props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 	   // props.put("mail.smtp.socketFactory.fallback", "false");

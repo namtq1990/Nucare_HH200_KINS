@@ -2,7 +2,7 @@ package Debug;
 
 public class Debug {
 
-	public static boolean IsDebugMode = true;
+	public static boolean IsDebugMode = false;
 
 	public static boolean IsBattEnalbe = true;
 	
@@ -12,7 +12,7 @@ public class Debug {
 	
 	public static boolean IsCalibrationMode = false;
 
-	public static boolean IsVolumeDown = false;
+	public static boolean IsVolumeDown = true;
 
 	public static boolean IsSetSpectrumExcute = true;
 

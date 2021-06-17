@@ -35,6 +35,7 @@ public class EventList_Adapter extends BaseAdapter
 	public static ListHolder mHolder;
     ArrayList<EventData> mEventID;
 	private Context mCtxt;
+    ListHolder key;
    public EventList_Adapter(Context ctxt, ArrayList<EventData> mData)
     {
 		mCtxt = ctxt;
@@ -143,6 +144,7 @@ public class EventList_Adapter extends BaseAdapter
 
         mHolder.FavoriteCheck.setVisibility(mEventID.get(position).Favorite_Checked.equals(IDspectrumActivity.Check.Favorite_True+";" )? View.VISIBLE : View.INVISIBLE);
 
+
         return convertView;
 
     }
@@ -154,6 +156,7 @@ public class EventList_Adapter extends BaseAdapter
         public void onClick(View view)
         {
             ListHolder holder = (ListHolder) view.getTag();
+            key = holder;
             mListener.onCellClick("click" , mEventID.get(holder.idx).Event_Number, holder.idx,mEventID.get(holder.idx).PhotoFileName1.size());
 
         }
@@ -166,10 +169,16 @@ public class EventList_Adapter extends BaseAdapter
         public boolean onLongClick(View view)
         {
             ListHolder holder = (ListHolder) view.getTag();
+            key = holder;
             mListener.onCellClick("longclick" , mEventID.get(holder.idx).Event_Number,holder.idx,mEventID.get(holder.idx).PhotoFileName1.size());
             return  true;
         }
     };
+
+    public int getId()
+    {
+        return mEventID.get(key.idx).Event_Number;
+    }
 
 
 }

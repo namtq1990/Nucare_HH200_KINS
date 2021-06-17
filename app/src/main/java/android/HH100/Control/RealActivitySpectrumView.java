@@ -176,8 +176,7 @@ public class RealActivitySpectrumView extends View {
 			log_yValue = ((log_yValue / log_yMax) * 100) * 0.01;
 
 			if (MoveToCheck == false) {
-				SpcPath.moveTo((float) (mDataRect.left + line_X),
-						(float) (mDataRect.bottom - (mDataRect.height() * log_yValue)));
+				SpcPath.moveTo((float) (mDataRect.left + line_X), (float) (mDataRect.bottom - (mDataRect.height() * log_yValue)));
 				MoveToCheck = true;
 			} else
 				SpcPath.lineTo((float) (mDataRect.left + line_X),

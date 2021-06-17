@@ -58,17 +58,17 @@ public class Detector implements Serializable {
 
 	public static final int DR_UNIT_SV = 20223;
 	public static final int DR_UNIT_R = 20224;
-	
-	
+
+
 	public int mHW_Cs137_FxiedCh1;
 	public int mHW_Cs137_FxiedCh2;
-	
+
 	public int mGain_restTime=10;
-	
+
 	public double mGCFactor=9;
 	public double mGCDefFactor=9;
-	
-	
+
+
 	public static class MeasurementInfo {
 		private String mInstrumentModel_Name;
 		private String mInstrumentModel_MacAddress;
@@ -149,6 +149,7 @@ public class Detector implements Serializable {
 	public Spectrum DB_BG = new Spectrum();
 	public Neutron mNeutron = new Neutron();
 	public int GM_Cnt;
+	public static double hv; //190425 highvoltage test
 	public double Coeffcients[] = new double[3];
 	public double GPS_Longitude;
 	public double GPS_Latitude;
@@ -164,6 +165,9 @@ public class Detector implements Serializable {
 	private boolean IsHealthEvent = false;
 	private int mMode = SETUP_MODE;
 	public int mGain_elapsedTime = GAIN_START_IN_SEC;
+	public int mTimeSpcCollect=0;
+	public boolean IsSpcSaved = false;
+
 
 	public boolean IsSigmaThreshold = false;
 	private Vector<Integer> Gamma_CPS_SigmaThre = new Vector<Integer>();
@@ -189,6 +193,8 @@ public class Detector implements Serializable {
 	private Context mRealTimeContext = null;
 
 	// sepctrum test
+	//190118 real time 추가
+	public static int realTime = 1;
 
 	public int GainSpeCount = 0;
 	public int mSaveCount =0;
@@ -208,6 +214,7 @@ public class Detector implements Serializable {
 		try {
 			MS.Set_crystalType(mCrystalType);
 			MS.Set_Spectrum(Spc);
+			MS.set_AcqTime(1);
 
 			if (mMode == ID_MODE) {
 				// for FINDER
@@ -232,7 +239,7 @@ public class Detector implements Serializable {
 
 				Operator_HealthSafetyEventSatus(Get_Gamma_DoseRate_nSV());
 				double GammaTh=Get_GammaThreshold() ;
-				if(GammaTh >0) 
+				if(GammaTh >0)
 				{	if (GammaTh < MS.Get_TotalCount() | IsHealthEvent == true)
 						Operator_GammaEventSatus(true);
 					else
@@ -281,6 +288,105 @@ public class Detector implements Serializable {
 		}
 		;
 	}
+
+
+	public void Set_Spectrum(int[] Spc, int acq) {
+		try {
+
+			//190118 추가
+			realTime = acq;
+			if(realTime <= 0) {
+				realTime = 1;
+			}
+
+			// SetCrystalType
+			MS.Set_crystalType(mCrystalType);
+			MS.Set_Spectrum(Spc, acq);
+
+			if (mMode == ID_MODE)
+			{
+				// for FINDER
+				if (RealTime_CPS != null) {
+					RealTime_CPS.add((double) MS.Get_TotalCount() / realTime);
+					if (RealTime_CPS.size() > PAST_SPC_ARRAY_SIZE)
+						RealTime_CPS.remove(0);
+				} else {
+					RealTime_CPS = new Vector<Double>();
+					for (int i = 0; i < PAST_SPC_ARRAY_SIZE; i++)
+						RealTime_CPS.add((double) -1);
+
+					RealTime_CPS.add((double) MS.Get_TotalCount() / realTime);
+					if (RealTime_CPS.size() > PAST_SPC_ARRAY_SIZE)
+						RealTime_CPS.remove(0);
+				}
+				//
+				/////////////////////////// Event
+
+				// Gamma event
+				// if(IsManualID) return;
+
+				Operator_HealthSafetyEventSatus(Get_Gamma_DoseRate_nSV());
+				double GammaTh=Get_GammaThreshold() ;
+
+				if(GammaTh >0)
+				{	if (GammaTh < MS.Get_TotalCount() | IsHealthEvent == true)
+				{
+					//NcLibrary.SaveText1(" GammaTh : "+GammaTh+" MS.Get_TotalCount() : "+ MS.Get_TotalCount()+" IsHealthEvent : "+IsHealthEvent+"\n","test");
+					Operator_GammaEventSatus(true);
+				}
+
+				else
+				{
+					Operator_GammaEventSatus(false);
+				}
+
+				}
+				// Neutron event
+				if (Neutron_ThresholdCnt < mNeutron.Get_CPS())
+					Operator_NeutronEventSatus(true);
+				else
+					Operator_NeutronEventSatus(false);
+
+				// When event
+				Event_Process();
+
+				if (Is_Event() == false) {
+					Gamma_CPS_SigmaThre.add(MS.Get_TotalCount());
+					if (Gamma_CPS_SigmaThre.size() > SIGMA_ACCUMUL_SEC)
+						Gamma_CPS_SigmaThre.remove(0);
+
+				} else {
+
+				}
+
+			}
+			// --===--
+
+			// MS.Set_HealthSafety_Threshold(HealthSafety_Threshold);
+			// MS.Set_mGammaDoserate(mGammaDoserate);
+			// MS.Set_crystalType(mCrystalTypeInt);
+
+			Intent intent = new Intent(MainBroadcastReceiver.MSG_RECV_SPECTRUM);
+			intent.putExtra(MainBroadcastReceiver.DATA_SPECTRUM, MS);
+			// intent.putExtra(MainBroadcastReceiver.DATA_EVENT, mGamma_Event);
+			LocalBroadcastManager.getInstance(mSuper).sendBroadcast(intent);
+			// --===--
+
+			// --===--
+			Intent intent2 = new Intent(MainBroadcastReceiver.MSG_RECV_NEUTRON);
+			intent2.putExtra(MainBroadcastReceiver.DATA_NEUTRON, mNeutron);
+			// intent.putExtra(MainBroadcastReceiver.DATA_EVENT, mGamma_Event);
+			LocalBroadcastManager.getInstance(mSuper).sendBroadcast(intent2);
+			// --===--
+
+			////////////////////
+		} catch (Exception e) {
+			NcLibrary.Write_ExceptionLog(e);
+		}
+		;
+	}
+
+
 
 	public void Set_Measured_Data(int[] Spc, double Neutron) {
 		MS.Set_Spectrum(Spc);
@@ -412,8 +518,8 @@ public class Detector implements Serializable {
 			 * Added Code to new algorithm
 			 */
 			Vector<Isotope> ID_Result = IsoLib.Find_Isotopes_with_Energy(mGamma_Event.MS, mGamma_Event.BG);
-			
-			
+
+
 			if (mGamma_Event.MS.Get_AcqTime() <= 5 & ID_Result.size() > 2) {
 				for (int i = 2; i < ID_Result.size(); i++) {
 					ID_Result.remove(i);
@@ -516,14 +622,14 @@ public class Detector implements Serializable {
 			Vector<Isotope> ID_Result = IsoLib.Find_Isotopes_with_Energy(mNeturonEvent.MS, mNeturonEvent.BG, Peaks);
 
 			 */
-			
+
 			/*..........................
 			 * Hung.18.03.05
 			 * Added Code to new algorithm
 			 */
 			Vector<Isotope> ID_Result = IsoLib.Find_Isotopes_with_Energy(mNeturonEvent.MS, mNeturonEvent.BG);
-			
-			
+
+
 			if (mNeturonEvent.MS.Get_AcqTime() <= 5 & ID_Result.size() > 2) {
 				Isotope iso1 = ID_Result.get(0);
 				Isotope iso2 = ID_Result.get(1);
@@ -743,7 +849,7 @@ public class Detector implements Serializable {
 
 		// YKIM, 2018.2.19
 		// to display "Stabilization in progress.." on top of main view
-		if (mGain_elapsedTime == mGain_restTime) 
+		if (mGain_elapsedTime == mGain_restTime)
 		{
 			Intent intent = new Intent(MainBroadcastReceiver.MSG_GAIN_STABILIZATION);
 			intent.putExtra(MainBroadcastReceiver.DATA_GS_STATUS, MainBroadcastReceiver.DATA_START);
@@ -752,56 +858,78 @@ public class Detector implements Serializable {
 		mGain_elapsedTime += 1;
 		if (D)
 			Log.i(TAG_GAIN, "Acq Time - " + mGain_elapsedTime + " sec / " + GAIN_START_IN_SEC + " sec");
-		
+
 		//YKIM, 2018.2.19
 		// rest time
 		if (mGain_elapsedTime <= mGain_restTime)
 			return;
 
 		mMS_Gainstabilization.Accumulate_Spectrum(spc); //receive spectrum
-		
+
+		// HungNM: Starting getting Spectrum
+        /*
+		mTimeSpcCollect+=1;
+		if(mTimeSpcCollect>=30&&IsSpcSaved==false) // time for Spectrum
+		{
+			//save text
+
+			// 파일안에 문자열 쓰기
+			String str=("30sec, "+ ", avgcps,"+  mMS_Gainstabilization.Get_AvgCPS()+ ", Data: ,"+ mMS_Gainstabilization.arrayString()+"\n");
+			NcLibrary.SaveText_HNM(str);
+
+			// reset buffer
+			mMS_Gainstabilization.ClearSPC();
+			IsSpcSaved=true;
+		}
+
+		if(IsSpcSaved==false) return;
+		*/
 		mMS_Gainstabilization.Set_Coefficients(spc.Get_Coefficients()); //receive energy calibration
 		//double []FWHM_NaI2_2=new double [] {1.2707811254,-1.5464537062};
 		double []FWHM_NaI2_2=spc.getFWHM();
 		mMS_Gainstabilization.setFWHM(FWHM_NaI2_2);//receive energy FWHM	
 		Real_BG.setFWHM(FWHM_NaI2_2);
-		
+
 		//save txt
 		//NcLibrary.SaveText("\n Gain_Stabilization mMS_Gainstabilization.Get_Coefficients()"+mMS_Gainstabilization.Get_Coefficients().ToString());
 		//NcLibrary.SaveText("\n Gain_Stabilization mMS_Gainstabilization.getFWHM()"+mMS_Gainstabilization.getFWHM().toString());
 
-		if (mMS_Gainstabilization.Get_TotalCount() > NcLibrary.GAIN_THRESHOLD_CNT) 
+		if (mMS_Gainstabilization.Get_TotalCount() > NcLibrary.GAIN_THRESHOLD_CNT)
 		{
 
 			PreferenceDB prefDB = new PreferenceDB(mSuper);
 			double Be_K40_Ch = prefDB.Get_CaliPeak3_From_pref();
-			
+
 			//Finding Peak					
 			int mMSROICnt=(int) NcLibrary.CalcROIK40(mMS_Gainstabilization.ToInteger(), mMS_Gainstabilization.getFWHM(), mMS_Gainstabilization.Get_Coefficients().get_Coefficients());
-									
+
 
 			if (D)
-			{	
+			{
 				Log.i(TAG_GAIN, "K40 Cnt - " + mMSROICnt + " Cnt  /  " + NcLibrary.GAIN_THRESHOLD_CNT + " Cnt");
 			}
 
-			
 
-			if (mMSROICnt > NcLibrary.GAIN_THRESHOLD_CNT) 
+
+			if (mMSROICnt > NcLibrary.GAIN_THRESHOLD_CNT)
 			{
-				
+
 				int mBGROICnt = (int) NcLibrary.CalcROIK40(Real_BG.ToInteger(),Real_BG.getFWHM(),Real_BG.Get_Coefficients().get_Coefficients());
 
-				
+
 				int K40_Ch=NcLibrary.PeakAna(mMS_Gainstabilization.ToInteger(), mMS_Gainstabilization.getFWHM(), mMS_Gainstabilization.Get_Coefficients().get_Coefficients());
-				
-			
+
+				//save text
+				String str=("Found K40ch,"+K40_Ch+  ", avgcps,"+  mMS_Gainstabilization.Get_AvgCPS()+", Spectrum,"+ mMS_Gainstabilization.arrayString()+"\n");
+				//NcLibrary.SaveText_HNM(str);
+
+
 				if (D)
 				{
 					Log.i(TAG_GAIN, "Old K40 - " + Be_K40_Ch + " ch, Found K40 - " + K40_Ch + " ch");
 				}
-				
-			
+
+
 				double mMS_Doserate_Avg = Get_Gamma_DoseRate_Spectrum_AVG_nSV(mMS_Gainstabilization,
 						mMS_Gainstabilization.Get_AcqTime()) / 1000;
 				double mDB_Doserate_Avg = Get_Gamma_DoseRate_Spectrum_AVG_nSV(DB_BG, DB_BG.Get_AcqTime()) / 1000;
@@ -809,9 +937,9 @@ public class Detector implements Serializable {
 				if (DB_BG.Get_AvgCPS()>0 && mBGROICnt>0) {
 					// existing background spectrum
 					if (K40_Ch > 0 && mMS_Gainstabilization.Get_AvgCPS() <= DB_BG.Get_AvgCPS() * 1.5
-								&& mMS_Doserate_Avg <= mDB_Doserate_Avg * 1.4 
+								&& mMS_Doserate_Avg <= mDB_Doserate_Avg * 1.4
 								&& (double)mMSROICnt/ (double)mMS_Gainstabilization.Get_AcqTime() <= ((double)mBGROICnt / (double)Real_BG.Get_AcqTime()) * 1.5) {
-		
+
 							// 파일안에 문자열 쓰기
 							//
 							//String str=("True K40ch,"+K40_Ch+", avgcps,"+ mMS_Gainstabilization.Get_AvgCPS()+",BGavgcps,"+DB_BG.Get_AvgCPS() + ",mMS_Doserate_Avg,"+mMS_Doserate_Avg+","
@@ -823,13 +951,13 @@ public class Detector implements Serializable {
 							intent.putExtra(MainBroadcastReceiver.DATA_K40_PEAK, K40_Ch);
 							LocalBroadcastManager.getInstance(mSuper).sendBroadcast(intent);
 							Init_GainStabilization();
-	
+
 					} else {
-						
+
 						mGain_restTime=10;
 						/////////////////////////////////////////////
 						// 파일안에 문자열 쓰기
-						
+
 						//String str=("Fail K40ch,"+K40_Ch+", avgcps,"+ mMS_Gainstabilization.Get_AvgCPS()+",BGavgcps,"+DB_BG.Get_AvgCPS() + ",mMS_Doserate_Avg,"+mMS_Doserate_Avg+","
 						//		+"mDB_Doserate_Avg,"+mDB_Doserate_Avg+",mMSROICnt,"+mMSROICnt+",MSTime,"+mMS_Gainstabilization.Get_AcqTime()+",mBGROICnt,"+mBGROICnt+",BGtime,"+ Real_BG.Get_AcqTime()+"\n");
 						//		NcLibrary.SaveText(str);
@@ -846,14 +974,14 @@ public class Detector implements Serializable {
 					intent.putExtra(MainBroadcastReceiver.DATA_K40_PEAK, K40_Ch);
 					LocalBroadcastManager.getInstance(mSuper).sendBroadcast(intent);
 					Init_GainStabilization();
-					
+
 				}
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	private void Gain_Stabilization_old(Spectrum spc) {
 
 		if (mGain_elapsedTime == 10) {
@@ -899,24 +1027,24 @@ public class Detector implements Serializable {
 
 			/*
 			 * double[] temp1 = new double[1024];
-			 * 
+			 *
 			 * temp1 = NcLibrary.Smooth(mMS_Gainstabilization.ToInteger(), 1024,
 			 * 10, 2);
-			 * 
+			 *
 			 * int mStbROICnt1 = (int) NcLibrary.ROIAnalysis_GetTotCnt(temp1,
 			 * mROI_Ch_start, mROI_Ch_end); if (mStbROICnt1 >
 			 * GAIN_THRESHOLD_CNT) { GainSpeCount++;
-			 * 
+			 *
 			 * String BodyText =
 			 * SpectrumToString(mMS_Gainstabilization.ToDouble());
-			 * 
+			 *
 			 * onTextWriting("Original : "+Integer.toString(GainSpeCount),
 			 * BodyText);
-			 * 
+			 *
 			 * BodyText = SpectrumToString(temp1);
 			 * onTextWriting("Smoothing : "+Integer.toString(GainSpeCount),
 			 * BodyText);
-			 * 
+			 *
 			 * }
 			 */
 
@@ -965,17 +1093,17 @@ public class Detector implements Serializable {
 				// mROI_Ch_end);
 
 				//int K40_Ch = NcLibrary.FindNearbyPeak(FindPeaks, mROI_Ch, mROI_Ch_start, mROI_Ch_end);
-			
-				
+
+
 				int K40_Ch = NcLibrary.ROIAnalysis(mMStemp, (int) (mROI_Ch * 0.9), (int) (mROI_Ch * 1.1));
-				
+
 				if(K40_Ch==0){
 					K40_Ch = NcLibrary.ROIAnalysis(mMStemp, (int) (mROI_Ch * 0.8), (int) (mROI_Ch * 1.2));
-					
+
 				}
 				if(K40_Ch==0){
 					K40_Ch = NcLibrary.ROIAnalysis(mMStemp, (int) (mROI_Ch * 0.7), (int) (mROI_Ch * 1.3));
-					
+
 				}
 				if (D)
 					Log.i(TAG_GAIN, "Old K40 - " + Be_K40_Ch + " ch, Found K40 - " + K40_Ch + " ch");
@@ -997,7 +1125,7 @@ public class Detector implements Serializable {
 					onTextWritingFindK40Spectrum("OriginalSpectrum", mSaveCount, SpectrumToString(mMS_Gainstabilization.ToDouble()));
 					onTextWritingFindK40Spectrum("SmoothSpectrum", mSaveCount, SpectrumToString(NcLibrary.Smooth(mMS_Gainstabilization.ToInteger(), 1024, 10, 2)));
 					*/
-					 
+
 
 					Intent intent = new Intent(MainBroadcastReceiver.MSG_GAIN_STABILIZATION);
 					intent.putExtra(MainBroadcastReceiver.DATA_GS_STATUS, MainBroadcastReceiver.DATA_END);
@@ -1023,8 +1151,8 @@ public class Detector implements Serializable {
 		}
 	}
 
-	
-	
+
+
 	public String SpectrumToString(double[] spectrum) {
 
 		String SpectrumStr = "";
@@ -1063,13 +1191,13 @@ public class Detector implements Serializable {
 			int tempindex = 0;
 			float diffgap = 0;
 
-			
+
 			float temp = 0;
-			
+
 			double tempchvalue=0;
 			double modvalue=0;
 			double modPercent=0;
-						
+
 			if (Now_K40 == 0)
 				diffgap = 1;
 			else
@@ -1077,14 +1205,14 @@ public class Detector implements Serializable {
 
 			for (int i = 0; i < MainActivity.CHANNEL_ARRAY_SIZE; i++)
 			{
-				tempchvalue= (double)(i)/diffgap; 
-				
+				tempchvalue= (double)(i)/diffgap;
+
 				tempindex = (int)Math.floor(tempchvalue); // floor(4.8)=4
  				modvalue= tempchvalue - tempindex;
-				
+
 				if(tempindex>0&&tempindex<MainActivity.CHANNEL_ARRAY_SIZE-2)
 				{
-					 NewBG[i]=(1-modvalue)*BG[tempindex]+modvalue*BG[tempindex+1];  		
+					 NewBG[i]=(1-modvalue)*BG[tempindex]+modvalue*BG[tempindex+1];
 				}
 
 			}
@@ -1103,6 +1231,10 @@ public class Detector implements Serializable {
 
 	private void Init_GainStabilization() {
 		mGain_elapsedTime = 0;
+
+		mTimeSpcCollect=0;
+		IsSpcSaved=false;
+
 		mMS_Gainstabilization.ClearAllData();
 	}
 

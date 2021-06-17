@@ -333,6 +333,8 @@ public class LogPhotoTab extends Activity {
 		if (IS_TAKE_PHOTO_AND_VIDEO == true) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.event_log, menu);
+
+
 		}
 		return true;
 	}
@@ -340,6 +342,7 @@ public class LogPhotoTab extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = null;
+
 		switch (item.getItemId()) {
 		case R.id.Photo:
 			if (mPhoto == null)
@@ -574,6 +577,7 @@ public class LogPhotoTab extends Activity {
 	protected void onResume() {
 
 		MainActivity.ActionViewExcuteCheck = Activity_Mode.UN_EXCUTE_MODE;
+
 		super.onResume();
 	}
 

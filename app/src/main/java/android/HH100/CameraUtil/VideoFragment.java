@@ -17,6 +17,7 @@
 package android.HH100.CameraUtil;
 
 import android.HH100.LogActivity.LogPhotoTab;
+import android.HH100.MainActivity;
 import android.HH100.R;
 import android.Manifest;
 import android.app.Activity;
@@ -384,10 +385,7 @@ public class VideoFragment extends Fragment
     @Override
     public void onClick(View view)
     {
-        MediaPlayer cameraSound;
-        //MediaPlayer cameraSound = MediaPlayer.create(getActivity(), R.raw.cam_Start);
-        AudioManager audioManager = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 20, 0);
+        MainActivity.mAlarmSound.setVolume(100, 100);
 
         switch (view.getId())
         {
@@ -396,15 +394,15 @@ public class VideoFragment extends Fragment
                     if (mIsRecordingVideo)
                     {
                         mButtonVideo.setBackgroundResource(R.drawable.popup_btn_video);
-                        cameraSound = MediaPlayer.create(getActivity(), R.raw.cam_stop);
-                        cameraSound.start();
+                        MainActivity.mAlarmSound = MediaPlayer.create(getActivity(), R.raw.cam_stop);
+                        MainActivity.mAlarmSound.start();
                         stopRecordingVideo();
                     }
                     else
                     {
                         mButtonVideo.setBackgroundResource(R.drawable.popup_btn_video1);
-                        cameraSound = MediaPlayer.create(getActivity(), R.raw.cam_start);
-                        cameraSound.start();
+                        MainActivity.mAlarmSound = MediaPlayer.create(getActivity(), R.raw.cam_start);
+                        MainActivity.mAlarmSound.start();
                         imgRec.setVisibility(View.VISIBLE);
                         mEllapse.setVisibility(View.VISIBLE);
                         mBaseTime = SystemClock.elapsedRealtime();

@@ -344,7 +344,7 @@
     <string name="Setup_Instrument_Key">Setup_Instrument_Key</string>
     <string name="Setup_Instrument_Title">장비 정보</string>
     <string name="Setup_Instrument_Surmary">장비 정보를 입력합니다.</string>
-    <string name="Setup_Instrument_Default">SAM950</string>
+    <string name="Setup_Instrument_Default">HH200</string>
     <string name="IsoLib_List_Key">IsoLib_list_key</string>
     <!--<string name="IND">IND</string>-->
     <!--<string name="MED">MED</string>-->

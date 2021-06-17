@@ -1387,89 +1387,94 @@ public class ActivityConfidence {
 
 		return BR;
 	}
-	
+
 	public static double[] ActCorrect(double[] Eff_Coef, double[] Peaken, double[][] BR, double[] Y, double[] W,	double time) {
 
 		int NoLineMeaning=0;
 		double sumtmp=0;
-		
+
 		int N = BR.length; // N: Number of peak erngy
 		int M = BR[0].length;// M: number of isotope
-		
-		
-		for(int i=0; i< N; i++)
-	    {
-	        sumtmp=0;
-	        
-	        for(int j=0;j< M;j++)
-	        {
-	            sumtmp=sumtmp+BR[i][j];
-	        }
-	        
-	        if(sumtmp>0)
-	        {
-	               NoLineMeaning=NoLineMeaning+1;
-	        }
-	   }
-		
-		double [] Peaken1=new double [NoLineMeaning];
-		
-		double []  Y1=new double [NoLineMeaning];
-		
-		double [] W1=new double [NoLineMeaning];
-		
-		double [][] BR1=new double [NoLineMeaning][M];
-		
-		
-		int cnt=0;
-		
-		for(int i=0; i< N; i++)
-	    {
-	        sumtmp=0;
-	        
-	        for(int j=0;j< M;j++)
-	        {
-	            sumtmp=sumtmp+BR[i][j];
-	        }
-	        
-	        if(sumtmp>0)
-	        {
-	              
-	        	Peaken1[cnt]=Peaken[i];
-	        	Y1[cnt]=Y[i];
-	        	W1[cnt]=W[i];
-	        	
-	        	 for(int j=0;j< M;j++)
-	        	 {
-	        		 BR1[cnt][j]=BR[i][j];
-	        	 }
-	        	 cnt=cnt+1;
-	        }
-	   }
-		
-		
 
-		int N1 = BR.length; // N: Number of peak erngy
-		int M1 = BR[0].length;// M: number of isotope
-		
-		
-		double[] Act = new double[M];		
-		
-		
+
+		for(int i=0; i< N; i++)
+		{
+			sumtmp=0;
+
+			for(int j=0;j< M;j++)
+			{
+				sumtmp=sumtmp+BR[i][j];
+			}
+
+			if(sumtmp>0)
+			{
+				NoLineMeaning=NoLineMeaning+1;
+			}
+		}
+
+		double [] Peaken1=new double [NoLineMeaning];
+
+		double []  Y1=new double [NoLineMeaning];
+
+		double [] W1=new double [NoLineMeaning];
+
+		double [][] BR1=new double [NoLineMeaning][M];
+
+
+		int cnt=0;
+
+		for(int i=0; i< N; i++)
+		{
+			sumtmp=0;
+
+			for(int j=0;j< M;j++)
+			{
+				sumtmp=sumtmp+BR[i][j];
+			}
+
+			if(sumtmp>0)
+			{
+
+				Peaken1[cnt]=Peaken[i];
+				Y1[cnt]=Y[i];
+				W1[cnt]=W[i];
+
+				for(int j=0;j< M;j++)
+				{
+					BR1[cnt][j]=BR[i][j];
+				}
+				cnt=cnt+1;
+			}
+		}
+
+
+
+		//int N1 = BR.length; // N: Number of peak erngy
+		//int M1 = BR[0].length;// M: number of isotope
+
+		//Modify: 18.15.10
+		int N1 = BR1.length; // N: Number of peak energy
+		int M1 = BR1[0].length;// M: number of isotope
+
+		double[] Act = new double[M];
+
+		Act=ActCorrect_Processing_IdenticalIso(Eff_Coef, Peaken1,  BR1,  Y1,  W1, time) ;
+
+		/*
 		if(N1>=M1)
 		{
 			Act=ActCorrect_Old(Eff_Coef, Peaken1,  BR1,  Y1,  W1, time) ;
-			
+
 		}
 		else
 		{
 			double [] ActTmp= new double [N1];
-			
+
 			double time1=time;
 			double en, eff, tmp;
 
 			double SumAct=0;
-			for (int i = 0; i < N1; i++) 
+			for (int i = 0; i < N1; i++)
 			{
 				en = Math.log(Peaken1[i]);
 
@@ -1477,31 +1482,32 @@ public class ActivityConfidence {
 						+ Eff_Coef[3] * Math.pow(en, 1.0) + Eff_Coef[4] * Math.pow(en, 0);
 
 				eff = Math.exp(tmp);
-				
-				for (int k = 0; k < M1; k++) 
+
+				for (int k = 0; k < M1; k++)
 				{
 					if(BR1[i][k]>0)
 					{
 						ActTmp[i]=ActTmp[i]+Y[i] /(eff*time1 * BR1[i][k]);
 					}
 				}
-				
+
 				ActTmp[i]=ActTmp[i]/(double)37000;
-				
+
 				SumAct=SumAct+ActTmp[i];
-			}		
-			
-			for (int i = 0; i < M; i++) 
+			}
+
+			for (int i = 0; i < M; i++)
 			{
 				Act[i]=SumAct/(double)M;
 			}
-			
+
 		}
-		
-		
+
+		*/
 		return Act;
-	
+
 	}
+
 
 	public static double[] ActCorrect_Old(double[] Eff_Coef, double[] Peaken, double[][] BR, double[] Y, double[] W,	double time) {
 
@@ -2862,5 +2868,233 @@ public class ActivityConfidence {
 			}
 		}
 		return ActTmp;
+	}
+	public static double[] ActCorrect_Processing_IdenticalIso(double[] Eff_Coef, double[] Peaken, double[][] BR, double[] Y, double[] W,double time)
+	{
+		//Modify: 18.15.10
+		int N = BR.length; // N: Number of peak energy
+		int M = BR[0].length;// M: number of isotope
+
+		double[] Act = new double[M];
+
+		// Processing: Identical isotope
+
+		int[][] IDMatrix = new int[M][M];	//IDentical matrix
+
+		int [] FLgMatrix = new int[M];	//Flg Matrix
+		for(int i=0;i<M;i++) FLgMatrix[i]=0;
+
+		double[][] BRTemp = new double[2][N];
+
+		//Step 1: Finding couple of identical isotope
+
+		int NoCoupleIso=0;
+
+		for(int i=0;i<M;i++) //rows
+		{
+			int count=1;
+
+			for(int j=i+1;j<M;j++)
+			{
+				if(i!=j&&FLgMatrix[j]==0)
+				{
+					for (int k=0;k<N;k++)
+					{
+						BRTemp[0][k]=BR[k][i];
+						BRTemp[1][k]=BR[k][j];
+					}
+
+					boolean Flg_Identical=BRCompare(BRTemp);
+
+					if(Flg_Identical) // Identical
+					{
+						IDMatrix[NoCoupleIso][0]=i+1;
+						IDMatrix[NoCoupleIso][count]=j+1;
+						FLgMatrix[j]=1;
+						FLgMatrix[i]=1;
+						count=count+1;
+					}
+				}
+			}
+			if(count>1)
+				NoCoupleIso=NoCoupleIso+1;
+		}
+
+
+		//Step 3: Calculate single source
+		int SingleSrc=0;
+		for(int i=0;i<M;i++)
+		{
+			if(FLgMatrix[i]==0) SingleSrc=SingleSrc+1;
+		}
+
+		//Step 4: Calculate activitivty
+		int M1=SingleSrc+NoCoupleIso;
+		int N1=N;
+
+		if(N1>=M1)
+		{
+			if(NoCoupleIso==0)
+			{
+				Act = ActCorrect_Old(Eff_Coef, Peaken, BR, Y, W, time);
+			}
+			else //identical isotope
+			{
+
+				//Processing with identical isotope
+				double [][] BR2=new double [N1][M1];
+				int count=0;
+				int sum1=0;
+				for(int j=0;j<N1;j++)
+				{
+					for(int i=0;i<NoCoupleIso;i++)
+					{
+						int index=IDMatrix[i][0]-1;
+						BR2[j][i]=BR[j][index];
+					}
+				}
+
+				//Get Branching from single source
+				int [] IsoSingSrc=new int [M];
+				count=NoCoupleIso;
+
+				for(int i=0;i<M;i++)
+				{
+					if(FLgMatrix[i]==0)
+					{
+						for(int k=0;k<N;k++)
+						{
+							BR2[k][count]=BR[k][i];
+						}
+
+						IsoSingSrc[i]=count;
+						count=count+1;
+					}
+				}
+
+
+				//Solving Equation
+				double[] ActIDen = new double[M1];
+				double [] WFF=new double [N1];
+				for(int i=0;i<N1;i++) WFF[i]=1;
+
+				ActIDen = ActCorrect_Old(Eff_Coef, Peaken, BR2, Y, WFF, time);
+
+				//devide activity
+				count=0;
+				for(int i=0;i<NoCoupleIso;i++)
+				{
+					int sum2=0;
+					for (int j=0;j<M;j++)
+					{
+						if(IDMatrix[i][j]>0)
+							sum2=sum2+1;
+					}
+
+					if(sum2>0)
+					{
+						for (int j=0;j<M;j++)
+						{
+							if(IDMatrix[i][j]>0)
+							{
+								int index=IDMatrix[i][j]-1;
+								//Act[index]=ActIDen[i]/(double)(sum2);
+								Act[index]=ActIDen[i]; //Though: if isotopes are identical, it mean only 1 source
+							}
+						}
+					}
+
+				}
+
+				//add activity for single source
+				for(int i=0;i<M;i++)
+				{
+					if(FLgMatrix[i]==0)
+					{
+						int index=IsoSingSrc[i];
+						Act[i]=ActIDen[index];
+					}
+				}
+
+			}
+
+		}
+		else
+		{
+			double[] ActTmp = new double[N1];
+
+			double time1 = time;
+			double en, eff, tmp;
+
+			double SumAct = 0;
+			for (int i = 0; i < N1; i++)
+			{
+				en = Math.log(Peaken[i]);
+
+				tmp = Eff_Coef[0] * Math.pow(en, 4.0) + Eff_Coef[1] * Math.pow(en, 3.0) + Eff_Coef[2] * Math.pow(en, 2.0)
+						+ Eff_Coef[3] * Math.pow(en, 1.0) + Eff_Coef[4] * Math.pow(en, 0);
+
+				eff = Math.exp(tmp);
+				int count=0;
+				for (int k = 0; k < M; k++)
+				{
+					if (BR[i][k]>0)
+					{
+						ActTmp[i] = ActTmp[i] + Y[i] / (eff*time1 * BR[i][k]);
+						count=count+1;
+					}
+				}
+
+				if(count==0) count=1;
+
+				ActTmp[i] = ActTmp[i] / (double)37000/(double)count;
+
+				SumAct = SumAct + ActTmp[i];
+			}
+
+			for (int i = 0; i < M; i++)
+			{
+				//Act[i] = SumAct / (double)N1;
+				Act[i] = SumAct;
+			}
+		}
+
+		return Act;
+
+	}
+	public static boolean BRCompare(double[][] BR)
+	{
+
+		double Error=0.01; //If branching ratio is <1%, they are same HEU and U-235
+		int N=BR.length; // Number of peak energy
+		int M=BR[0].length; //Number of isotope
+
+		double []Diff=new double[M];
+
+
+		if(N==2)
+		{
+			for (int k=0;k<M;k++)
+			{
+				double MS=(BR[0][k]+BR[1][k])/(double) (2.0);
+				double TS=BR[0][k]-BR[1][k];
+				if(MS>0)
+				{
+					Diff[k]=Math.abs(TS/MS);
+				}
+			}
+		}
+
+		boolean Flg=true;
+		for (int k=0;k<M;k++)
+		{
+			if(Diff[k]>Error) Flg=false;
+		}
+
+		boolean FLg_Identical=false;
+
+		if(Flg==true) FLg_Identical=true;
+
+		return FLg_Identical;
 	}
 }

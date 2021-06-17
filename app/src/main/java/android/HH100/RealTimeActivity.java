@@ -498,25 +498,7 @@ public class RealTimeActivity extends Activity implements View.OnTouchListener {
 
 	public synchronized void onResume() {
 
-		MainActivity.SendU2AA();
-
-		/*
-		 * TimerTask mTask = new TimerTask() {
-		 * 
-		 * @Override public void run() { MainActivity.SendU4AA();
-		 * 
-		 * } };
-		 * 
-		 * Timer mTimer = new Timer(); mTimer.schedule(mTask, 500);
-		 * 
-		 * TimerTask mTask1 = new TimerTask() {
-		 * 
-		 * @Override public void run() { MainActivity.SendU2AA(); } };
-		 * 
-		 * Timer mTimer1 = new Timer(); mTimer1.schedule(mTask1, 1000);
-		 * 
-		 * 
-		 */
+		//MainActivity.SendU2AA();
 
 		m_GammaGuage_Panel.invalidate();
 

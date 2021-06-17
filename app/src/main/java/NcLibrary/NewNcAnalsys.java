@@ -3992,7 +3992,14 @@ public class NewNcAnalsys {
 		double [] Thshold=new double [2];
 		Thshold[0]=ROI_L_En;
 		Thshold[1]=ROI_R_En;
-		
+
+		if(en==2615)
+		{
+			double Wnd=0.035; // +/- 3.5 percent
+			Thshold[0]=en*(1.0-Wnd);
+			Thshold[1]=en*(1.0+Wnd);
+		}
+
 		return Thshold;		
 	}
 	
@@ -4971,23 +4978,20 @@ public class NewNcAnalsys {
 
 			double Thshld_Un = 10;
 			double Thshld_RMSE = 1.2;
+			double Uncer_cs=100;
 
+			/*
+			double Thshld_Un = 20;
+			double Thshld_RMSE = 2.0;
+			*/
+
+/*			double Thshld_Un = 20;
+			double Thshld_RMSE = 1.5;*/
 
 			// Step 1: Remove noise candidate to improve find activity by solving matrix
 
 			ActivityConfidence FindCvalue = new ActivityConfidence();
-			/*
-			Result2 = FindCvalue.ActivityCorrection_H(Spc, Result2, PeakInfo,mstime ,FWHMCoeff,coeff, Eff_Coeff,WndROI);
 
-			for (int e = 0; e < Result2.size(); e++)
-			{
-				if (Result2.get(e).Act < 0)
-				{
-					Result2.remove(e);
-					e--;
-				}
-
-			}*/
 
 			Result2=ScreeningProcess_1st(Spc, Result2, PeakInfo, FWHMCoeff, coeff, Eff_Coeff, mstime, Thshld_Un, Thshld_RMSE,WndROI);
 			//Step 2:  Calculate activity
@@ -5027,6 +5031,34 @@ public class NewNcAnalsys {
 				{
 					Result2 = FindCvalue.ActivityCorrection_H1(Spc, Result2, PeakInfo,mstime ,FWHMCoeff,coeff, Eff_Coeff,WndROI);
 
+
+					//2019.08.29: Adding condition threadshold
+					//Starting
+					boolean FlgThshld=false;
+					Thshld_Un = 10;
+					Thshld_RMSE = 1.2;
+
+					for (int s = 0; s < NoIso; s++)
+					{
+						if (Result2.get(s).Act == 0) // have at least 1 source w/ Activty=0
+						{
+							FlgThshld=true;
+						}
+					}
+
+					if(FlgThshld==true)
+					{
+						Thshld_Un = 20;
+						Thshld_RMSE = 2;
+					}
+					else
+					{
+						Thshld_Un = 10;
+						Thshld_RMSE = 1.2;
+					}
+
+					//end ---- 2019.08.29
+
 					//Condition
 					NoID = 0;
 
@@ -5034,9 +5066,19 @@ public class NewNcAnalsys {
 					{
 						if (Result2.get(s).Act > 0)
 						{
-							if (Result2.get(s).Uncer <= Thshld_Un && Result2.get(s).RMSE <= Thshld_RMSE)
+							//adding condition for cs-137
+							if(AddExceptLogic_Cs(Result2.get(s))==true)
 							{
-								NoID = NoID + 1;
+								if (Result2.get(s).Uncer <= Uncer_cs && Result2.get(s).RMSE <= 10)
+								{
+									NoID = NoID + 1;
+								}
+							}
+							else
+								{
+								if (Result2.get(s).Uncer <= Thshld_Un && Result2.get(s).RMSE <= Thshld_RMSE) {
+									NoID = NoID + 1;
+								}
 							}
 						}
 					}
@@ -5055,11 +5097,23 @@ public class NewNcAnalsys {
 						{
 							if (Result2.get(i).Act > 0)
 							{
-								if (Result2.get(i).Uncer <= Thshld_Un && Result2.get(i).RMSE <= Thshld_RMSE)
+								//adding condition for cs-137
+								if(AddExceptLogic_Cs(Result2.get(i))==true)
 								{
-									Nu_new[cnt1] = List_Iso1[i];
+									if (Result2.get(i).Uncer <= Uncer_cs && Result2.get(i).RMSE <= 10)
+									{
+										Nu_new[cnt1] = List_Iso1[i];
 
-									cnt1 = cnt1 + 1;
+										cnt1 = cnt1 + 1;
+									}
+								}
+								else {
+									if (Result2.get(i).Uncer <= Thshld_Un && Result2.get(i).RMSE <= Thshld_RMSE)
+									{
+										Nu_new[cnt1] = List_Iso1[i];
+
+										cnt1 = cnt1 + 1;
+									}
 								}
 							}
 
@@ -5165,6 +5219,7 @@ public class NewNcAnalsys {
 		}
 		return Result2;
 	}
+
 	public static Vector<Isotope> C_Thshold_Filter(Vector<Isotope> Result2,double[] Act,double UnLimit)
 	{
 
@@ -5548,11 +5603,21 @@ public class NewNcAnalsys {
 				{
 					if (Result2.get(i).isotopes.equals("WGPu"))
 					{
-
 						Result2.remove(i);
 						--i;
 					}
-
+				}
+			}
+			//remove RGPu
+			else
+			{
+				for (int i = 0; i < Result2.size(); i++)
+				{
+					if (Result2.get(i).isotopes.equals("RGPu"))
+					{
+						Result2.remove(i);
+						--i;
+					}
 				}
 			}
 		}
@@ -5560,6 +5625,7 @@ public class NewNcAnalsys {
 
 		return Result2;
 	}
+
 	public static Vector<Isotope> AddCondition_Cs137_U233(Vector<Isotope> Result2, Vector<NcPeak> PeakInfo, double[] FWHMCoeff,	Coefficients coeff) 
 	{
 		
@@ -5744,10 +5810,31 @@ public class NewNcAnalsys {
 					
 					for (int s = 0; s < ResultTemp.size(); s++)
 					{
+						//add more
+						//old
+						/*
 						if (ResultTemp.get(s).Act < 0 || ResultTemp.get(s).Uncer >Thshld_Un )
 						{
-							ListIso_Remove[cnt_ID_Remove] = ResultTemp.get(s).isotopes;	
+							ListIso_Remove[cnt_ID_Remove] = ResultTemp.get(s).isotopes;
 							cnt_ID_Remove=cnt_ID_Remove+1;
+						}
+						*/
+						if(AddExceptLogic_Cs(ResultTemp.get(s))==true)
+						{
+							if (ResultTemp.get(s).Act < 0 || ResultTemp.get(s).Uncer >100 )
+							{
+								ListIso_Remove[cnt_ID_Remove] = ResultTemp.get(s).isotopes;
+								cnt_ID_Remove=cnt_ID_Remove+1;
+							}
+						}
+						else
+						{
+								if (ResultTemp.get(s).Act < 0 || ResultTemp.get(s).Uncer >Thshld_Un )
+								{
+									ListIso_Remove[cnt_ID_Remove] = ResultTemp.get(s).isotopes;
+									cnt_ID_Remove=cnt_ID_Remove+1;
+								}
+
 						}
 					}			
 					
@@ -6929,5 +7016,89 @@ public class NewNcAnalsys {
 		return Result2;
 	}
 
+	public static Vector<Isotope> AddCondition_Cs_U233HE_U235HE(Vector<Isotope> Result2)
+	{
+
+		boolean Cs_Flg=false,U233HE_Flg=false,U235HE_Flg=false;
+
+
+		for (int i = 0; i < Result2.size(); i++)
+		{
+			if (Result2.get(i).isotopes.equals("Cs-137"))
+			{
+				Cs_Flg=true;
+			}
+
+			if (Result2.get(i).isotopes.equals("U-233HE"))
+			{
+				U233HE_Flg=true;
+			}
+
+			if (Result2.get(i).isotopes.equals("U-235HE"))
+			{
+				U235HE_Flg=true;
+			}
+		}
+
+		//remove U233HE
+		if(Cs_Flg==true&&U233HE_Flg==true)
+		{
+			for (int i = 0; i < Result2.size(); i++)
+			{
+				if (Result2.get(i).isotopes.equals("U-233HE"))
+				{
+
+					Result2.remove(i);
+					--i;
+				}
+
+			}
+		}
+
+		//remove U-235HE
+		if(Cs_Flg==true&&U235HE_Flg==true)
+		{
+			for (int i = 0; i < Result2.size(); i++)
+			{
+				if (Result2.get(i).isotopes.equals("U-235HE"))
+				{
+
+					Result2.remove(i);
+					--i;
+				}
+
+			}
+		}
+
+
+		return Result2;
+	}
+
+	public static boolean AddExceptLogic_Cs(Isotope result2)
+	{
+		boolean flg=false;
+
+		if (result2.isotopes.equals("Cs-137"))
+		{
+			int NoPeak=result2.IsoPeakEn.size();
+
+			//text file writing
+			// Nopeak,result2.IsoPeakEn.get(0), uncertainty, rmse
+			if(NoPeak==1)
+			{
+				double abs1=result2.IsoPeakEn.get(0)-662;
+
+				if(Math.abs(abs1)<=2)
+				{
+					flg=true;
+				}
+			}
+
+
+			//NcLibrary.SaveText_HNM("NoPeak,"+NoPeak+"flg,"+flg+"result2.IsoPeakEn.get(0),"+result2.IsoPeakEn.get(0)+"result2.Uncer,"+result2.Uncer+"result2.RMSE,"+result2.RMSE+"Act,"+result2.Act+"\n");
+		}
+
+		return flg;
+	}
 
 }

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -20,8 +19,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.usb.UsbAccessory;
-import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
@@ -29,6 +26,9 @@ import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.android.future.usb.UsbAccessory;
+import com.android.future.usb.UsbManager;
 
 import static android.HH100.MainService.PACKET1_STANDARD;
 import static android.HH100.MainService.PACKET2_STANDARD;
@@ -38,7 +38,6 @@ import static android.HH100.MainService.PACKET5_STANDARD;
 import static android.HH100.MainService.PACKET6_STANDARD;
 import static android.HH100.MainService.PACKET7_STANDARD;
 import static android.HH100.MainService.PACKET8_STANDARD;
-import static android.content.Context.USB_SERVICE;
 
 public class MainUsbService {
 	// 수정 내용 : 브로드캐스트 리시버 수행 후 자동 종료되도록 소스 추가
@@ -48,7 +47,6 @@ public class MainUsbService {
 
 	public static final boolean USB_CONNECT_CHECK = false;
 
-	private static final String NAME = "Kainac";
 	TimerTask mUnstableMessageTask;
 	boolean mUnstableMessageStop = true;
 	private final Handler mSuperHandler;
@@ -63,6 +61,13 @@ public class MainUsbService {
 	boolean mDuplicateRock = true;
 
 	int count123 = 0;
+
+	//190123 추후 galaxy j3 패킷용
+	public static String name = "";
+	int secondRealTime = 0;
+	double secondRealTime1 = 0;
+	double hv = 0;
+
 
 	enum UsbMode {
 
@@ -224,7 +229,7 @@ public class MainUsbService {
 
 		//181102 inseon.ahn 추가
 		public final int RECEIVE_SPECKTRUM406 = 406; // UUU ? + 400 + FF
-		public final int RECEIVE_SPECKTRUM297 = 301; // UUU? + 295 + FF
+		public final int RECEIVE_SPECKTRUM301 = 301; // UUU? + 295 + FF
 		public final int RECEIVE_UUSN = 23; // UUSN(4)	+MCU(3)+FPGA(4)+BOARD(6)+Serial(6byte)
 		private int RECEIVE_UUGK2 = 13 + 512;
 		public final int RECEIVE_SPECKTRUM = 3095;
@@ -233,6 +238,7 @@ public class MainUsbService {
 		boolean firstPacket = false;
 		boolean isPacketError = false;
 		byte[] spectrumBuffer = new byte[5000];
+
 
 		Runnable myRunnable = new Runnable()
 		{
@@ -318,93 +324,80 @@ public class MainUsbService {
 
 							//android 6.0 이후 os부터  (400byte+7) + FF 2byte+ 295byte 로 나눠서 전송
 							case RECEIVE_SPECKTRUM406: //UUU ? + 200 + FF : 406
-								if(buffer[3] == PACKET1_STANDARD )
-								{
-									spectrumBuffer = new byte[5000];
-									if(packetCnt != 0)
-									{
+								if (buffer[3] == PACKET1_STANDARD) {
+
+									if (packetCnt != 0) {
 										isPacketError = true;
+									} else {
+										isPacketError = false;
 									}
 									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
 
-									System.arraycopy( buffer, 4, spectrumBuffer, 0,400);
-									packetCnt++;
-								}
-								if(buffer[3] == PACKET2_STANDARD )
-								{
-									if(packetCnt != 1)
-									{
-										isPacketError = true;
-									}
-									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 400, 400);
-									packetCnt++;
-								}
-								if(buffer[3] == PACKET3_STANDARD )
-								{
-									if(packetCnt != 2)
-									{
-										isPacketError = true;
-									}
-									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 800, 400);
-									packetCnt++;
-								}
-								if(buffer[3] == PACKET4_STANDARD )
-								{
-									if(packetCnt != 3)
-									{
-										isPacketError = true;
-									}
-									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 1200, 400);
-									packetCnt++;
-								}
-								if(buffer[3] == PACKET5_STANDARD )
-								{
-									if(packetCnt != 4)
-									{
-										isPacketError = true;
-									}
-									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 1600, 400);
+									System.arraycopy(buffer, 4, spectrumBuffer, 0, 400);
 									packetCnt++;
 								}
 
-								if(buffer[3] == PACKET6_STANDARD )
-								{
-									if(packetCnt != 5)
-									{
+								if (buffer[3] == PACKET2_STANDARD) {
+									if (packetCnt != 1) {
 										isPacketError = true;
 									}
 									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 2000, 400);
+									System.arraycopy(buffer, 4, spectrumBuffer, 400, 400);
+									packetCnt++;
+								}
+								if (buffer[3] == PACKET3_STANDARD) {
+									if (packetCnt != 2) {
+										isPacketError = true;
+									}
+									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
+									System.arraycopy(buffer, 4, spectrumBuffer, 800, 400);
+									packetCnt++;
+								}
+								if (buffer[3] == PACKET4_STANDARD) {
+									if (packetCnt != 3) {
+										isPacketError = true;
+									}
+									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
+									System.arraycopy(buffer, 4, spectrumBuffer, 1200, 400);
+									packetCnt++;
+								}
+								if (buffer[3] == PACKET5_STANDARD) {
+									if (packetCnt != 4) {
+										isPacketError = true;
+									}
+									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
+									System.arraycopy(buffer, 4, spectrumBuffer, 1600, 400);
 									packetCnt++;
 								}
 
-								if(buffer[3] == PACKET7_STANDARD )
-								{
-									if(packetCnt != 6)
-									{
+								if (buffer[3] == PACKET6_STANDARD) {
+									if (packetCnt != 5) {
 										isPacketError = true;
 									}
 									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 2400, 400);
+									System.arraycopy(buffer, 4, spectrumBuffer, 2000, 400);
+									packetCnt++;
+								}
+
+								if (buffer[3] == PACKET7_STANDARD) {
+									if (packetCnt != 6) {
+										isPacketError = true;
+									}
+									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
+									System.arraycopy(buffer, 4, spectrumBuffer, 2400, 400);
 									packetCnt++;
 								}
 
 								break;
 
-							case RECEIVE_SPECKTRUM297:
+							case RECEIVE_SPECKTRUM301:
 
-								if(buffer[3] == PACKET8_STANDARD )
-								{
-									if(packetCnt != 7)
-									{
+								if (buffer[3] == PACKET8_STANDARD) {
+									if (packetCnt != 7) {
 										isPacketError = true;
 									}
 									//srcPos 3 = U U U  ?  numberOfByteRead-2 : ff tail
-									System.arraycopy( buffer, 4, spectrumBuffer, 2800, 295);
+									System.arraycopy(buffer, 4, spectrumBuffer, 2800, 295);
 									packetCnt++;
 								}
 
@@ -412,37 +405,36 @@ public class MainUsbService {
 								firstPacket = false;
 								packetCnt = 0;
 
-								if(!isPacketError)
-								{
+								if (!isPacketError) {
+									int[] pdata = new int[1024];
 									ReadDetectorData mReadData = new ReadDetectorData();
 
-									mReadData.pdata = byteToDecimal(spectrumBuffer, arrayTotalCount);
+									mReadData.pdata = byteToDecimal_j3(spectrumBuffer, arrayTotalCount);
 									mReadData.GetAVGNeutron = GetAVGNeutron();
+
+									if (IsThereNeutron == 0) {
+										mReadData.IsThereNeutron = false;
+									} else {
+										mReadData.IsThereNeutron = true;
+									}
 
 									SetPacketData(mReadData.pdata, Neutron, GM);
 
 									mReadData.Neutron = Neutron;
 									mReadData.GM = GM;
+									mReadData.isRealTime = true;
+									mReadData.mRealTime = secondRealTime;
+									mReadData.time = secondRealTime1;
+									mReadData.mHighVoltage = hv;
 
-									SystemClock.sleep( 500 );
+									isPacketError = true;
+									spectrumBuffer = new byte[5000];
+									SystemClock.sleep( 100 );
+									mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA_J3, 0, 0, mReadData).sendToTarget();
 
-									///
-									if (IsThereNeutron == 0)
-									{
-										mReadData.IsThereNeutron = false;
-										mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA, GetAvgGmValue(), -1, mReadData.pdata).sendToTarget();
-									}
-									else
-									{
-										mReadData.IsThereNeutron = true;
-										MainActivity.mDetector.mNeutron.Set_CPS((GetAVGNeutron() <= 0.08) ? 0 : GetAVGNeutron());
-										mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA, GetAvgGmValue(), 0, mReadData.pdata).sendToTarget();
-									}
-
-								}
-								else
-								{
-									isPacketError = false;
+								} else {
+									isPacketError = true;
+									spectrumBuffer = new byte[5000];
 								}
 
 								break;
@@ -478,7 +470,7 @@ public class MainUsbService {
 								mSuperHandler.obtainMessage(MainActivity.MESSAGE_USB_READ_GC, s, s2, mGCData).sendToTarget();
 
 								break;
-							case RECEIVE_SPECKTRUM:
+/*							case RECEIVE_SPECKTRUM:
 
 								int[] pdata = new int[1024];
 								pdata = byteToDecimal(buffer, arrayTotalCount);
@@ -495,6 +487,39 @@ public class MainUsbService {
 									mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA, GetAvgGmValue(), 0, pdata).sendToTarget();
 
 								}
+
+								break;
+
+							default:
+								break;*/
+							case RECEIVE_SPECKTRUM:
+
+								int[] pdata = new int[1024];
+								ReadDetectorData mReadData = new ReadDetectorData();
+
+								mReadData.pdata = byteToDecimal(buffer, arrayTotalCount);
+								mReadData.GetAVGNeutron = GetAVGNeutron();
+
+								if (IsThereNeutron == 0) {
+									mReadData.IsThereNeutron = false;
+								} else {
+									mReadData.IsThereNeutron = true;
+								}
+
+								SetPacketData(mReadData.pdata, Neutron, GM);
+
+								mReadData.Neutron = Neutron;
+								mReadData.GM = GM;
+								mReadData.isRealTime = true;
+								mReadData.mHighVoltage = hv;
+								//mReadData.mRealTime = secondRealTime;
+								//mReadData.time = secondRealTime1;
+
+//								isPacketError = true;
+//								spectrumBuffer = new byte[5000];
+//								SystemClock.sleep( 50 );
+								mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA_J3, 0, 0, mReadData).sendToTarget();
+
 
 								break;
 
@@ -654,8 +679,8 @@ public class MainUsbService {
 
 				} else if (action.equals(UsbManager.ACTION_USB_ACCESSORY_DETACHED)) {
 
-			//		UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
-					UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
+					UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
+					//UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
 
 					if (usbAccessory != null && usbAccessory.equals(myUsbAccessory)) {
 
@@ -673,12 +698,12 @@ public class MainUsbService {
 
 					synchronized (this) {
 
-					//	UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
-						UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
+						UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
+						//UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
 
 						if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
 
-							OpenUsbAccessory(usbAccessory[0]);
+							OpenUsbAccessory(usbAccessory);
 
 						} else {
 
@@ -707,12 +732,13 @@ public class MainUsbService {
 
 					synchronized (this) {
 
-						//UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
-						UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
+						UsbAccessory usbAccessory = UsbManager.getAccessory(intent);
+						//UsbAccessory[] usbAccessory = myUsbManager.getAccessoryList();
 
 						if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
 
-							OpenUsbAccessory(usbAccessory[0]);
+							//OpenUsbAccessory(usbAccessory[0]);
+							OpenUsbAccessory(usbAccessory);
 
 						} else {
 
@@ -729,6 +755,101 @@ public class MainUsbService {
 			}
 
 		};
+
+		//190123
+		public int[] byteToDecimal_j3(byte[] buffer, int arrayTotalCount) {
+			try {
+
+				for (int i = 0; i < 1024; i++) {
+					int a = 0, b = 0, c = 0, sum = 0;
+					a = buffer[3 * i] & 0xff;
+					b = buffer[3 * i + 1] & 0xff;
+					c = buffer[3 * i + 2] & 0xff;
+
+					totalcount[i] = ((char) a * 0x10000 + ((char) b * 0x100 + ((char) c)));
+
+					if (totalcount[i] > 1500000) {
+						totalcount[i] = 0;
+					}
+
+				}
+
+				int a = 0, b = 0, c = 0;
+
+				a = buffer[3075] & 0xff;
+				b = buffer[3076] & 0xff;
+				c = buffer[3077] & 0xff;
+
+				GM = ((char) a * 0x10000 + ((char) b * 0x100 + ((char) c)));
+
+				a = buffer[3078] & 0xff;
+				b = buffer[3079] & 0xff;
+				c = buffer[3080] & 0xff;
+
+				Neutron = ((char) a * 0x10000 + ((char) b * 0x100 + ((char) c)));
+
+				a = buffer[3081] & 0xff;
+				b = buffer[3082] & 0xff;
+				c = buffer[3083] & 0xff;
+
+
+				if (MainActivity.mDetector.mHW_GC > 1024) {
+
+					IsThereNeutronBit = byteToIntergerArray(buffer[3081]);
+
+					IsThereNeutron = (int) Byte.parseByte("0000000" + Integer.toString(IsThereNeutronBit.get(0)), 2);
+
+					a = (int) Byte.parseByte("0" + Integer.toString(IsThereNeutronBit.get(1))
+							+ Integer.toString(IsThereNeutronBit.get(2)) + Integer.toString(IsThereNeutronBit.get(3))
+							+ Integer.toString(IsThereNeutronBit.get(4)) + Integer.toString(IsThereNeutronBit.get(5))
+							+ Integer.toString(IsThereNeutronBit.get(6)) + Integer.toString(IsThereNeutronBit.get(7)), 2);
+
+					int FillCps;
+
+					FillCps = ((char) a * 0x10000 + ((char) b * 0x100 + ((char) c)));
+
+					MS.SetFillCps(FillCps);
+				} else {
+					IsThereNeutron = ((char) a * 0x10000 + ((char) b * 0x100 + ((char) c)));
+				}
+
+
+				int abdeInt = 0;
+				int abdeInt1 = 0;
+				int Battery = 0;
+
+				abdeInt = buffer[3088] & 0xff;
+				abdeInt1 = buffer[3089] & 0xff;
+				Battery = ((char) abdeInt * 0x100 + ((char) abdeInt1));
+
+				int time1 = buffer[3090] & 0xff;
+				int time2 = buffer[3091] & 0xff;
+				secondRealTime1 = ((char) time1 * 0x100 + ((char) time2));
+				secondRealTime = (int) Math.round(((secondRealTime1 / 1000) * 10) / 10);
+
+				///NcLibrary.SaveText1("realTime : "+secondRealTime+"\n", "test");
+
+				//190111
+				b = buffer[3092] & 0xff;
+				c = buffer[3093] & 0xff;
+				hv = ((char) b * 0x100 + ((char) c));
+				//NcLibrary.SaveText1("hv : "+hv+"  bat : "+ Battery+"\n", "test");
+
+				mBatteryCount++;
+
+				if (mBatteryCount == 50 || mBatteryCount > 9) {
+
+					mBatteryCount = 0;
+					mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_BATTERY, AcumulBattery_and_getNowPercent(Battery), -1,
+							AcumulBattery_and_getNowPercent(Battery)).sendToTarget();
+				}
+			} catch (NumberFormatException e) {
+				NcLibrary.Write_ExceptionLog(e);
+
+			}
+
+			return totalcount;
+		}
 
 		private void closeUsbAccessory() {
 
@@ -868,6 +989,11 @@ public class MainUsbService {
 
 			}
 
+			//190425 test추가
+			b = buffer[3092] & 0xff;
+			c = buffer[3093] & 0xff;
+			hv = ((char) b * 0x100 + ((char) c));
+
 			mBatteryCount++;
 
 			if (mBatteryCount == 50 || mBatteryCount > 9) {
@@ -975,8 +1101,8 @@ public class MainUsbService {
 
 		public void StartReceiver() {
 
-			//myUsbManager = UsbManager.getInstance(mContext);
-			myUsbManager = (UsbManager) mContext.getSystemService(USB_SERVICE);
+			myUsbManager = UsbManager.getInstance(mContext);
+			//myUsbManager = (UsbManager) mContext.getSystemService(USB_SERVICE);
 
 			IntentFilter intentFilter = new IntentFilter();
 

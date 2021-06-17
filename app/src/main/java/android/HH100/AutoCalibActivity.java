@@ -157,12 +157,15 @@ public class AutoCalibActivity extends Activity {
 				try {
 
 					//if (MainActivity.mDetector.MS.Get_TotalCount() > MainActivity.mDetector.DB_BG.Get_AvgCPS() * 1.5) 
-					if (MainActivity.mDetector.MS.Get_TotalCount() > 1000)
+
+		/*			if (MainActivity.mDetector.MS.Get_TotalCount() > 1000)
 					{
 						Finish(RESULT_CANCEL);
 						finish();
 						return;
-					}
+					}*/
+
+
 					Spectrum recv_data = (Spectrum) intent.getSerializableExtra(DATA_SPECTRUM);
 					// ------------------------------------------------------------------------
 					mSPC.Accumulate_Spectrum(recv_data);
@@ -183,7 +186,7 @@ public class AutoCalibActivity extends Activity {
 					int K40_ROI_cnt=(int) NcLibrary.CalcROIK40(mSPC.ToInteger(), mSPC.getFWHM(), mSPC.Get_Coefficients().get_Coefficients());					
 					
 
-					double percent1 = NcMath.Percent(K40_ROI_cnt,NcLibrary.GAIN_THRESHOLD_CNT);// ((double)K40_ROI_cnt/(double)mThreshold_cnt)*100.0;
+					double percent1 = NcMath.Percent(K40_ROI_cnt, NcLibrary.GAIN_THRESHOLD_CNT);// ((double)K40_ROI_cnt/(double)mThreshold_cnt)*100.0;
 					//double percent2=mNumOfGS*25;
 					double percent=(mNumOfGS*25)+((percent1/100)*25);
 					if (percent >= 100)

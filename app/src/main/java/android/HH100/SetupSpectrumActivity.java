@@ -813,8 +813,8 @@ public class SetupSpectrumActivity extends Activity implements View.OnTouchListe
 							Coefficients Ch_coeff = new Coefficients(new double[] { Peaks[0], Peaks[1], K40_Ch });
 							
 							int[] caliInfo= {(int)Peaks[0], (int)Peaks[1], K40_Ch, MainActivity.mDetector.mHW_GC };
-							NcLibrary.SaveTextCali(caliInfo,MainActivity.FilenameCaliInfo, 4);
-							
+					NcLibrary.SaveTextCali(caliInfo,MainActivity.FilenameCaliInfo, 4);
+
 							// mHW_GC, Channal info update
 							MainActivity.mDetector.mHW_Cs137_FxiedCh1=(int)Peaks[0];
 							MainActivity.mDetector.mHW_Cs137_FxiedCh2=(int)Peaks[1];

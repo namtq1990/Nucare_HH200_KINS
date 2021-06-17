@@ -241,7 +241,7 @@ public class RecActivity extends Activity implements View.OnClickListener, OnCom
 			}
 
 			mToast = Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_SHORT);
-			mToast.setText("Start Recdoing");
+			mToast.setText("Start Recording");
 			mToast.show();
 
 			startRec();
@@ -258,7 +258,7 @@ public class RecActivity extends Activity implements View.OnClickListener, OnCom
 				NcLibrary.Write_ExceptionLog(e);
 			}
 			mToast = Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_SHORT);
-			mToast.setText("Complete Record");
+			mToast.setText("Recording Stopped");
 			mToast.show();
 
 			mRecState = REC_STOP;

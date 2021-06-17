@@ -1,6 +1,7 @@
 package android.HH100.Identification;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import NcLibrary.Coefficients;
@@ -8,6 +9,7 @@ import NcLibrary.NewNcAnalsys;
 import NcLibrary.SpcAnalysis;
 import android.HH100.Control.*;
 import android.HH100.DB.EventDBOper;
+import android.HH100.IDspectrumActivity;
 import android.HH100.R.string;
 import android.HH100.Structure.NcLibrary;
 import android.HH100.Structure.NcPeak;
@@ -27,7 +29,7 @@ public class IsotopesLibrary {
 	    180907 DB_VERSION \n추가 이전버전 byte array[3]으로 선언 2자리수 버전만 처리가능
 	     \n추가해서 한줄로 통채로 인식
 	 */
-	public static String DB_VERSION = "1.1.1\n"; //180313 버전업(2.4->2.5) 180727 1.1.0 -> 180831 v1.1.1 ->
+	public static String DB_VERSION = "1.1.3\n"; //180313 버전업(2.4->2.5) 180727 1.1.0 -> 180831 v1.1.1 ->1.1.2 ->191211 v1.1.3
 
 	public IsotopesLibrary(Context context) {
 		// super(context, "SS.db", null, 1);
@@ -71,80 +73,80 @@ public class IsotopesLibrary {
 	 * private Vector<Isotope> find_Ba133_81keV(Vector<Isotope> Target, int[]
 	 * Energy, int[] channel, int[] VallyCh,double[] VallyAB,int Energy_Count){
 	 * boolean WasFound = false; if(Target.isEmpty()) return Target;
-	 * 
+	 *
 	 * Vector<Isotope> result2 = new Vector<Isotope>();
-	 * 
+	 *
 	 * for(int i =0 ; i<Target.size(); i++){ result2.add(Target.get(i));
 	 * if(Target.get(i).isotopes.matches("Ba-133")){ WasFound = true; } }
 	 * if(WasFound)return result2; //result2.remove(result2.size());
-	 * 
+	 *
 	 * double L_ROI_Percent = 0; double R_ROI_Percent = 0; double measu_sum = 0;
 	 * boolean check = false; Isotope TempResult = new Isotope(); Isotope Ba133 =
 	 * Get_Isotope("Ba-133"); if(Ba133.Energy1 == 161) Ba133.Energy1 = 81;
 	 * if(Ba133.Energy2 == 161) Ba133.Energy2 = 81; if(Ba133.Energy3 == 161)
 	 * Ba133.Energy3 = 81; TempResult = Ba133;
-	 * 
+	 *
 	 * for(int k=0; k<Energy_Count;k++){ if(Ba133.Energy1== 0) break; double
 	 * Roi_window = NcLibrary.Get_Roi_window_by_energy(Ba133.Energy1); L_ROI_Percent
 	 * = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-	 * 
+	 *
 	 * //L_ROI_Percent = L_ROI_Percent*1.01; //R_ROI_Percent = R_ROI_Percent*0.99;
 	 * if(Ba133.Energy1*L_ROI_Percent < Energy[k] && Ba133.Energy1*R_ROI_Percent >
 	 * Energy[k]) { check=true; double
 	 * measu=Math.abs((((Energy[k]-Ba133.Energy1)/Ba133.Energy1)*100)); measu = 100
 	 * - measu; measu_sum = measu;
-	 * 
+	 *
 	 * TempResult.isotopes = Ba133.isotopes; TempResult.Energy1 = Ba133.Energy1;
 	 * TempResult.Channel1 = channel[k]; TempResult.Channel1_Vally.x =
 	 * VallyCh[(k*2)]; TempResult.Channel1_Vally.y = VallyCh[(k*2)+1];
 	 * TempResult.Channel1_AB.x = (float) VallyAB[(k*2)]; TempResult.Channel1_AB.y =
 	 * (float) VallyAB[(k*2)+1];
-	 * 
+	 *
 	 * break; } else { check=false; }
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * for(int k=0; k<Energy_Count;k++){ if(Ba133.Energy2 == 0) break; double
 	 * Roi_window = NcLibrary.Get_Roi_window_by_energy(Ba133.Energy2); L_ROI_Percent
 	 * = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-	 * 
+	 *
 	 * if(Ba133.Energy2*L_ROI_Percent < Energy[k] &&Ba133.Energy2*R_ROI_Percent >
 	 * Energy[k]) { check=true;
-	 * 
+	 *
 	 * double measu=Math.abs((((Energy[k]-Ba133.Energy2)/Ba133.Energy2)*100)); measu
 	 * = 100 - measu; measu_sum += measu; measu_sum = (measu_sum/2);
-	 * 
+	 *
 	 * TempResult.isotopes = Ba133.isotopes; TempResult.Energy2 = Ba133.Energy2;
 	 * TempResult.Channel2 = channel[k]; TempResult.Channel2_Vally.x =
 	 * VallyCh[(k*2)]; TempResult.Channel2_Vally.y = VallyCh[(k*2)+1];
 	 * TempResult.Channel2_AB.x = (float) VallyAB[(k*2)]; TempResult.Channel2_AB.y =
 	 * (float) VallyAB[(k*2)+1]; break;} else { check=false;
-	 * 
+	 *
 	 * } }
-	 * 
+	 *
 	 * for(int k=0; k<Energy_Count;k++){ if(Ba133.Energy3 == 0) break; double
 	 * Roi_window = NcLibrary.Get_Roi_window_by_energy(Ba133.Energy3); L_ROI_Percent
 	 * = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-	 * 
+	 *
 	 * if(Ba133.Energy3*L_ROI_Percent < Energy[k] && Ba133.Energy3*R_ROI_Percent >
 	 * Energy[k]){ check=true; double
 	 * measu=Math.abs((((Energy[k]-Ba133.Energy3)/Ba133.Energy3)*100)); measu = 100
 	 * - measu; measu_sum += measu; measu_sum = (measu_sum/2);
-	 * 
+	 *
 	 * TempResult.isotopes = Ba133.isotopes; TempResult.Energy3 = Ba133.Energy3;
 	 * TempResult.Channel3 = channel[k]; TempResult.Channel3_Vally.x =
 	 * VallyCh[(k*2)]; TempResult.Channel3_Vally.y = VallyCh[(k*2)+1];
 	 * TempResult.Channel3_AB.x = (float) VallyAB[(k*2)]; TempResult.Channel3_AB.y =
 	 * (float) VallyAB[(k*2)+1]; break;} else { check=false;
-	 * 
+	 *
 	 * } }
-	 * 
-	 * 
+	 *
+	 *
 	 * if(check == true){ int re = (int)measu_sum;
-	 * 
+	 *
 	 * TempResult.Confidence_Level = re; TempResult.measure_eff =measu_sum;
 	 * TempResult.Class = Ba133.Class; result2.add(TempResult); check = false; }
-	 * 
+	 *
 	 * return result2; }
 	 */
 	private Vector<Isotope> find_Ba133_81keV(Vector<Isotope> Target, Vector<NcPeak> Peak_data) {
@@ -283,7 +285,7 @@ public class IsotopesLibrary {
 			cu.close();
 		}
 	}
-	
+
 	private void Read_data_From_DBfile() {
 
 		Vector<String> IsoLib_list = Read_Isolib_List();
@@ -415,158 +417,158 @@ public class IsotopesLibrary {
 		 * int VallyCh[],double VallyAB[], int Energy_Count) { Vector<String> result =
 		 * new Vector<String>(); Vector<Isotope> result2 = new Vector<Isotope>();
 		 * Isotope TempResult = new Isotope();
-		 * 
+		 *
 		 * if(mLoadCheck == false) return result2; //
-		 * 
+		 *
 		 * boolean check = false;
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * double L_ROI_Percent = 0.94; double R_ROI_Percent = 1.06; double measu_sum =
 		 * 0;
-		 * 
-		 * 
+		 *
+		 *
 		 * for(int i=0; i<mSel_Library.size(); i++){ int PeakCnt = 0 ;
 		 * if(mSel_Library.get(i).IdPeak_En1) PeakCnt +=1;
 		 * if(mSel_Library.get(i).IdPeak_En2) PeakCnt +=1;
 		 * if(mSel_Library.get(i).IdPeak_En3) PeakCnt +=1;
 		 * if(mSel_Library.get(i).IdPeak_En4) PeakCnt +=1;
 		 * if(mSel_Library.get(i).IdPeak_En5) PeakCnt +=1;
-		 * 
+		 *
 		 * TempResult = mSel_Library.get(i); measu_sum = 0;
-		 * 
+		 *
 		 * for(int k=0; k<Energy_Count;k++){ if(mSel_Library.get(i).Energy1== 0 |
 		 * mSel_Library.get(i).IdPeak_En1 == false) { if(mSel_Library.get(i).Energy1 !=
 		 * 0 & mSel_Library.get(i).IdPeak_En1 == false) check=true; break; } double
 		 * Roi_window = NcLibrary.Get_Roi_window_by_energy(mSel_Library.get(i).Energy1);
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(mSel_Library.get(i).Energy1*L_ROI_Percent < Energy[k] &&
 		 * mSel_Library.get(i).Energy1*R_ROI_Percent > Energy[k]) { check=true; double
 		 * measu=Math.abs((((Energy[k]-mSel_Library.get(i).Energy1)/mSel_Library
 		 * .get(i).Energy1)*100)); measu = 100 - measu; measu_sum = measu;
-		 * 
+		 *
 		 * TempResult.isotopes = mSel_Library.get(i).isotopes; TempResult.Energy1 =
 		 * mSel_Library.get(i).Energy1; TempResult.Channel1 = channel[k];
 		 * TempResult.Channel1_Vally.x = VallyCh[(k*2)]; TempResult.Channel1_Vally.y =
 		 * VallyCh[(k*2)+1]; TempResult.Channel1_AB.x = (float) VallyAB[(k*2)];
 		 * TempResult.Channel1_AB.y = (float) VallyAB[(k*2)+1];
-		 * 
-		 * 
+		 *
+		 *
 		 * break; } else { check=false; }
-		 * 
+		 *
 		 * } if(check == false) continue; for(int k=0; k<Energy_Count;k++){
 		 * if(mSel_Library.get(i).Energy2== 0 | mSel_Library.get(i).IdPeak_En2 == false)
 		 * { if(mSel_Library.get(i).Energy2 != 0 & mSel_Library.get(i).IdPeak_En2 ==
 		 * false) check=true; break; } double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(mSel_Library.get(i).Energy2);
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(mSel_Library.get(i).Energy2*L_ROI_Percent < Energy[k]
 		 * &&mSel_Library.get(i).Energy2*R_ROI_Percent > Energy[k]) { check=true;
-		 * 
+		 *
 		 * double measu=Math.abs((((Energy[k]-mSel_Library.get(i).Energy2)/mSel_Library
 		 * .get(i).Energy2)*100)); measu = 100 - measu; measu_sum += measu;
-		 * 
+		 *
 		 * TempResult.isotopes = mSel_Library.get(i).isotopes; TempResult.Energy2 =
 		 * mSel_Library.get(i).Energy2; TempResult.Channel2 = channel[k];
 		 * TempResult.Channel2_Vally.x = VallyCh[(k*2)]; TempResult.Channel2_Vally.y =
 		 * VallyCh[(k*2)+1]; TempResult.Channel2_AB.x = (float) VallyAB[(k*2)];
 		 * TempResult.Channel2_AB.y = (float) VallyAB[(k*2)+1];
-		 * 
-		 * 
+		 *
+		 *
 		 * break;} else { check=false;
-		 * 
+		 *
 		 * } } if(check == false) continue; for(int k=0; k<Energy_Count;k++){
 		 * if(mSel_Library.get(i).Energy3== 0 | mSel_Library.get(i).IdPeak_En3 == false)
 		 * { if(mSel_Library.get(i).Energy3 != 0 & mSel_Library.get(i).IdPeak_En3 ==
 		 * false) check=true; break; } double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(mSel_Library.get(i).Energy3);
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(mSel_Library.get(i).Energy3*L_ROI_Percent < Energy[k] &&
 		 * mSel_Library.get(i).Energy3*R_ROI_Percent > Energy[k]) { check=true; double
 		 * measu=Math.abs((((Energy[k]-mSel_Library.get(i).Energy3)/mSel_Library
 		 * .get(i).Energy3)*100)); measu = 100 - measu; measu_sum += measu;
-		 * 
+		 *
 		 * TempResult.isotopes = mSel_Library.get(i).isotopes; TempResult.Energy3 =
 		 * mSel_Library.get(i).Energy3; TempResult.Channel3 = channel[k];
 		 * TempResult.Channel3_Vally.x = VallyCh[(k*2)]; TempResult.Channel3_Vally.y =
 		 * VallyCh[(k*2)+1]; TempResult.Channel3_AB.x = (float) VallyAB[(k*2)];
 		 * TempResult.Channel3_AB.y = (float) VallyAB[(k*2)+1];
-		 * 
-		 * 
+		 *
+		 *
 		 * break;} else { check=false;
-		 * 
+		 *
 		 * } } if(check == false) continue; for(int k=0; k<Energy_Count;k++){
 		 * if(mSel_Library.get(i).Energy4== 0 | mSel_Library.get(i).IdPeak_En4 == false)
 		 * { if(mSel_Library.get(i).Energy4 != 0 & mSel_Library.get(i).IdPeak_En4 ==
 		 * false) check=true; break; }
-		 * 
+		 *
 		 * double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(mSel_Library.get(i).Energy4);
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(mSel_Library.get(i).Energy4*L_ROI_Percent < Energy[k] &&
 		 * mSel_Library.get(i).Energy4*R_ROI_Percent > Energy[k]) { check=true; double
 		 * measu=Math.abs((((Energy[k]-mSel_Library.get(i).Energy4)/mSel_Library
 		 * .get(i).Energy4)*100)); measu = 100 - measu; measu_sum += measu;
-		 * 
+		 *
 		 * TempResult.isotopes = mSel_Library.get(i).isotopes; TempResult.Energy4 =
 		 * mSel_Library.get(i).Energy4; TempResult.Channel4 = channel[k];
 		 * TempResult.Channel4_Vally.x = VallyCh[(k*2)]; TempResult.Channel4_Vally.y =
 		 * VallyCh[(k*2)+1]; TempResult.Channel4_AB.x = (float) VallyAB[(k*2)];
 		 * TempResult.Channel4_AB.y = (float) VallyAB[(k*2)+1];
-		 * 
-		 * 
+		 *
+		 *
 		 * break;} else { check=false;
-		 * 
+		 *
 		 * } } if(check == false) continue; for(int k=0; k<Energy_Count;k++){
 		 * if(mSel_Library.get(i).Energy5== 0 | mSel_Library.get(i).IdPeak_En5 == false)
 		 * { if(mSel_Library.get(i).Energy5 != 0 & mSel_Library.get(i).IdPeak_En5 ==
 		 * false) check=true; break; }
-		 * 
+		 *
 		 * double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(mSel_Library.get(i).Energy5);
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(mSel_Library.get(i).Energy5*L_ROI_Percent < Energy[k] &&
 		 * mSel_Library.get(i).Energy5*R_ROI_Percent > Energy[k]) { check=true; double
 		 * measu=Math.abs((((Energy[k]-mSel_Library.get(i).Energy5)/mSel_Library
 		 * .get(i).Energy5)*100)); measu = 100 - measu; measu_sum += measu;
-		 * 
+		 *
 		 * TempResult.isotopes = mSel_Library.get(i).isotopes; TempResult.Energy5 =
 		 * mSel_Library.get(i).Energy5; TempResult.Channel5 = channel[k];
 		 * TempResult.Channel5_Vally.x = VallyCh[(k*2)]; TempResult.Channel5_Vally.y =
 		 * VallyCh[(k*2)+1]; TempResult.Channel5_AB.x = (float) VallyAB[(k*2)];
 		 * TempResult.Channel5_AB.y = (float) VallyAB[(k*2)+1];
-		 * 
-		 * 
+		 *
+		 *
 		 * break; } else { check=false;
-		 * 
+		 *
 		 * } } if(check == false) continue;
-		 * 
+		 *
 		 * if(check == true){ // found isotope
-		 * 
+		 *
 		 * int re = (int)measu_sum/PeakCnt; String temp =
 		 * mSel_Library.get(i).isotopes+"   "+String.valueOf(re)+"%"; result.add(temp);
-		 * 
-		 * 
+		 *
+		 *
 		 * TempResult.Confidence_Level =re; TempResult.measure_eff =measu_sum;
 		 * TempResult.Class = mSel_Library.get(i).Class; result2.add(TempResult);
 		 * TempResult = null; TempResult = new Isotope(); check = false; // /*int
 		 * TempCount = 0; for(int q=0; q<FoundEnegy.size(); q++){ for(int w=0;
 		 * w<Energy_Count; w++){ if(FoundEnegy.get(q) == Energy[w]){ Energy[w] = 0;
 		 * TempCount +=1; } } }
-		 * 
+		 *
 		 * }
-		 * 
+		 *
 		 * }
-		 * 
+		 *
 		 * result2 =
 		 * find_Ba133_81keV(result2,Energy,channel,VallyCh,VallyAB,Energy_Count) ;
-		 * 
-		 * 
+		 *
+		 *
 		 * result2 = Filter_IdLogic_Algorithm_1(result2); result2 =
 		 * Filter_IdLogic_Algorithm_2(result2); result2 =
 		 * Filter_IdLogic_Algorithm_3(result2); result2 =
@@ -576,7 +578,7 @@ public class IsotopesLibrary {
 		 * Filter_IdLogic_Algorithm_9(result2); result2 =
 		 * Filter_IdLogic_Algorithm_12(result2); result2 =
 		 * Filter_IdLogic_Algorithm_13(result2);
-		 * 
+		 *
 		 * result2 = Find_UnknownPeak(result2, Energy, channel, VallyCh, VallyAB,
 		 * Energy_Count); return result2; }//end Find_Isotopes_with_Energy
 		 */
@@ -679,215 +681,539 @@ public class IsotopesLibrary {
 		return result2;
 	}// end Find_Isotopes_with_Energy
 
+	public Vector<Isotope> Find_Isotopes_with_Energy(Spectrum SPC, Spectrum BG)
+	{
+		//190327
+		if(SPC.getFWHM()==null)
+		{
+			double [] FWHM_Fixed= new double []{ 1.2707811254, -1.5464537062 };
+			double WinROI_Fixed=0.6;
+			double[] Eff_Coeff_Fixed = new double[] { -0.027939138, 0.694026779, -6.627760069, 28.20796375, -48.74100729 };
 
-	/*...............................................
-	 * Function for finding Peak and Source ID are implemented here. 
-	 * Date: 201.03.05
-	 */
-	public Vector<Isotope> Find_Isotopes_with_Energy(Spectrum SPC, Spectrum BG) {
+			SPC.setFWHM(FWHM_Fixed);
+			SPC.setWnd_Roi(WinROI_Fixed);
+			SPC.setFindPeakN_Coefficients(Eff_Coeff_Fixed);
+		}
+
+		if(BG.getFWHM()==null)
+		{
+			double [] FWHM_Fixed= new double []{ 1.2707811254, -1.5464537062 };
+			double WinROI_Fixed=0.6;
+			double[] Eff_Coeff_Fixed = new double[] { -0.027939138, 0.694026779, -6.627760069, 28.20796375, -48.74100729 };
+
+			BG.setFWHM(FWHM_Fixed);
+			BG.setWnd_Roi(WinROI_Fixed);
+			BG.setFindPeakN_Coefficients(Eff_Coeff_Fixed);
+		}
+
+		double Thrshld_Index1=0.95;
+		double Thrshld_Index2=0.9;
+		double Thrshld_UnClaimed_Index1=0.95;
+
+		double Thrshld_UnClaimed_Index2=0.5;	//should change Index2 to 0.5, before we set 0.2
+
+		//180727
+		double Thrshld_Index2_MinorMajor_Ra226=0.9; // Calculate confidence index for all minor and major
+		double ThrShld_Act_Except_Ra226=0.2; //increasing 0.1 to 0.2 (20%) for activity
+		double ThrShld_Act_Except_OtherIso=0.2; //increasing 0.1 to 0.2 (20%) for activity
+		double Act_Thsold=0.05; //5% // Actvity theshold
+		double  WndROI_CEPeak= 1.0;
+		double ThrShld_Act_Except_Ra226_Ba133=0.3;
+
+
+		Coefficients EnCoeff_Cali = SPC.Get_Coefficients();// Energy Calibration
+		// double[] FWHM_gen = new double[] { 1.2707811254, -1.5464537062 };
+		double WndROI = BG.getWnd_Roi();
+
+		double[] FWHM_gen = BG.getFWHM();
+
+		double[] Eff_Coeff = BG.getFindPeakN_Coefficients();
+
+
+
+		// Step 1: Processing: Find PeakInfor. BG Subtracted is minus in this step
+
+		Vector<NcPeak> mFoundPeak_data = NewNcAnalsys.Find_Peak(SPC, BG);
 
 		Vector<Isotope> result2 = new Vector<Isotope>();
 
-		if (SPC.getFWHM() != null) {
+		if (mLoadCheck == false)
+			return result2;
 
-			double Thrshld_Index1 = 0.95;
-			double Thrshld_Index2 = 0.9;
-			double Thrshld_UnClaimed_Index1 = 0.95;
-			double Thrshld_UnClaimed_Index2 = 0.2;
-			double Thrshld_Index2_MinorMajor_Ra226 = 0.9; // Calculate confidence index for all minor and major
-			double ThrShld_Act_Except_Ra226 = 0.1;
-			double ThrShld_Act_Except_OtherIso = 0.1;
-			double Act_Thsold = 0.05; // 5% // Actvity theshold
-			double WndROI_CEPeak = 1.0;
+		// Step 2: ID Isotope by templete matching
 
-			Coefficients EnCoeff_Cali = SPC.Get_Coefficients();// Energy Calibration
+		// result2 = PeakMatchIsotope(mFoundPeak_data);
 
-			double WndROI = SPC.getWnd_Roi();
+		result2 = PeakMatchIsotope_H(mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
 
-			double[] FWHM_gen = SPC.getFWHM();
+		// Step 3: Applied Confidence filter
+		// result2 = IndexFillter(result2);
+		result2 = NewNcAnalsys.IndexFillter_H(result2, FWHM_gen, EnCoeff_Cali, Eff_Coeff, WndROI,Thrshld_Index1,Thrshld_Index2);
 
-			double[] Eff_Coeff = SPC.getFindPeakN_Coefficients();
+		int CHSIZE = 1024;
+		double[] ChSpec = new double[CHSIZE];
+		for (int i = 0; i < SPC.Get_Ch_Size(); i++)
+		{
+			ChSpec[i] = SPC.at(i);
+		}
 
-			// Step 1: Processing: Find PeakInfor. BG Subtracted is minus in this step
 
-			Vector<NcPeak> mFoundPeak_data = NewNcAnalsys.Find_Peak(SPC, BG);
 
-			// Step 2: ID Isotope by template matching
-			result2 = NewNcAnalsys.PeakMatchIsotope_H(mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI, mSel_Library);
+		//18.05.16: adding logic table C.E peak for Cs137 and Co60
+		result2=NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+		result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+		result2=NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
 
-			// Step 3: Applied Confidence filter
-			result2 = NewNcAnalsys.IndexFillter_H(result2, FWHM_gen, EnCoeff_Cali, Eff_Coeff, WndROI, Thrshld_Index1,Thrshld_Index2);
+		//condition for WGPu and RGPu
+		result2=NewNcAnalsys.AddCondition_WGPu_RGPU(result2, mFoundPeak_data,FWHM_gen,	EnCoeff_Cali,WndROI);
 
-			int CHSIZE = 1024;
-			double[] ChSpec = new double[CHSIZE];
-			for (int i = 0; i < SPC.Get_Ch_Size(); i++) {
-				ChSpec[i] = SPC.at(i);
-			}
+		//1st Screening Processing
+		// Step 4: Activity Calculation
+		if (result2.size() > 0) {
+			// result2 = NewNcAnalsys.CValue_Filter(NewNcAnalsys.Smooth_Spc(ChSpec),
+			// result2, mFoundPeak_data, FWHM_gen,Eff_Coeff, SPC.Get_AcqTime());
+			result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2, mFoundPeak_data, FWHM_gen,EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI,Act_Thsold);
 
-			// remove K-40
-			if (result2.size() > 0) {
-				for (int i = 0; i < result2.size(); i++) {
-					if (result2.get(i).isotopes.equals("K-40")) {
-
-						// result2.remove(i);
-						// --i;
-					}
-
-				}
-			}
-			// 18.05.16: adding logic table C.E peak for Cs137 and Co60
-			result2 = NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali,
-					WndROI_CEPeak);
-			result2 = NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
-
-			// Step 4: Activity Calculation
-
-			// 1st Screening Processing
-			if (result2.size() > 0) {
-
-				// result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec),
-				// result2, mFoundPeak_data, FWHM_gen,EnCoeff_Cali, Eff_Coeff,
-				// SPC.Get_AcqTime(), WndROI);
-				result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2, mFoundPeak_data,
-						FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI, Act_Thsold);
-
-				// Adding information
-				for (int i = 0; i < result2.size(); i++) {
-					result2.get(i).Screening_Process = 1;
-				}
-
-			}
-
-			// Step 5: Last condition for validation isotope
-
-			// 2nd Sreening Processing
-			if (result2.size() >= 0) {
-
-				Vector<NcPeak> UnClaimedPeak = NewNcAnalsys.CValue_Return_UnclaimedEn(NewNcAnalsys.Smooth_Spc(ChSpec),
-						result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI);
-
-				// condition
-				int NoFoundPeak = mFoundPeak_data.size();
-
-				int NoUnclaimedPeak = UnClaimedPeak.size();
-
-				double RatioPeak = (double) NoUnclaimedPeak / (double) NoFoundPeak;
-
-				if (RatioPeak > 0.5) // Peak: 50% is unclaime peak
-				{
-					Act_Thsold = 0.01; // 1%
-				}
-
-				if (RatioPeak > 0.25) // at least more than 25% unclaimed peak will
-				// be processed
-				{
-					Vector<Isotope> Unclaimed_Result = new Vector<Isotope>();
-
-					// Template Matching
-					Unclaimed_Result = NewNcAnalsys.PeakMatchIsotope_H(UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI,
-							mSel_Library);
-
-					// Remove Peaks which was still remembered in memory in Java
-					Unclaimed_Result = IsoRemoveLines(Unclaimed_Result, UnClaimedPeak);
-
-					// Re calcute confidence index
-					Unclaimed_Result = NewNcAnalsys.IndexFillter_H(Unclaimed_Result, FWHM_gen, EnCoeff_Cali, Eff_Coeff,
-							WndROI, Thrshld_UnClaimed_Index1, Thrshld_UnClaimed_Index2);
-
-					// 18.05.16: adding logic table C.E peak for Cs137 and Co60
-					Unclaimed_Result = NewNcAnalsys.LogicComptonPeakCs_Co60(Unclaimed_Result, UnClaimedPeak, FWHM_gen,
-							EnCoeff_Cali, WndROI_CEPeak);
-
-					// Condition for High enriched uranium
-					Unclaimed_Result = NewNcAnalsys.LogicHighEnricUranium(Unclaimed_Result, UnClaimedPeak, FWHM_gen,
-							EnCoeff_Cali, WndROI);
-
-					// Step 1: Find best isotope with max number of line
-					if (Unclaimed_Result.size() > 0) {
-						Unclaimed_Result = NewNcAnalsys.IsotopeID_UnClaimedLine(NewNcAnalsys.Smooth_Spc(ChSpec),
-								Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(),
-								WndROI);
-
-						// Adding information
-						for (int i = 0; i < Unclaimed_Result.size(); i++) {
-							Unclaimed_Result.get(i).Screening_Process = 2;
-						}
-					}
-
-					// Step2 : Final calculation
-
-					if (Unclaimed_Result.size() > 0) {
-
-						result2 = NewNcAnalsys.AddingIsotope(result2, Unclaimed_Result);
-
-						if (result2.size() > 0) {
-							// 18.05.16: adding logic table C.E peak for Cs137 and Co60
-							result2 = NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen,
-									EnCoeff_Cali, WndROI_CEPeak);
-							result2 = NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen,
-									EnCoeff_Cali, WndROI);
-
-							result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2,
-									mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI,
-									Act_Thsold);
-						}
-					}
-
-				}
-
-				// Adding condition to prohibit Co57 and Tc99m
-
-				// result2=NewNcAnalsys. AddCondition_Ra_Ba(result2);
-
-				// Adding condition to prohibit WGPU by logic when RGPu is IDed
-				// Adding condition to prohibit Ra and Ba
-				if (result2.size() > 0) {
-					// result2=NewNcAnalsys.AddCondition_Ra_Ba(result2);
-					// result2=NewNcAnalsys.AddCondition_Ra_Ba(result2,mFoundPeak_data,
-					// FWHM_gen,EnCoeff_Cali,WndROI,Eff_Coeff,
-					// SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ba-133", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_Ra226);
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "U-235", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_Ra226);
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ga-67", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_Ra226);
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "In-111", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_Ra226);
-
-					// Co57 vs Eu152: Activty Ratio of Co57/Eu=11~15%, so take theshold 0.2
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152", "Co-57", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							0.2);
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152", "U-235", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_OtherIso);
-
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "Tl-201", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_OtherIso);
-
-					result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "I-131", result2, mFoundPeak_data,
-							FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226,
-							ThrShld_Act_Except_Ra226);
-
-				}
-
-			}
-			// sTEP 4: Adding Minor Peak
-			// Adding Minor Peak for Showing
-			if (result2.size() > 0) {
-				result2 = AddPeakDraw(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
+			//Adding information
+			for (int i = 0; i < result2.size(); i++)
+			{
+				result2.get(i).Screening_Process=1;
 			}
 
 		}
+
+		// Step 5: Last condition for validation isotope
+
+
+		// 2nd Sreening Processing
+		if (result2.size() >= 0)
+		{
+
+			Vector<NcPeak> UnClaimedPeak = NewNcAnalsys.CValue_Return_UnclaimedEn(NewNcAnalsys.Smooth_Spc(ChSpec),
+					result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI);
+
+			// condition
+			int NoFoundPeak = mFoundPeak_data.size();
+
+			int NoUnclaimedPeak = UnClaimedPeak.size();
+
+			double RatioPeak=(double)NoUnclaimedPeak/(double)NoFoundPeak;
+
+			if(RatioPeak>0.5) //Peak: 50% is unclaime peak
+			{
+				Act_Thsold=0.01; //1%
+			}
+
+
+			if (RatioPeak > 0.25) // at least more than 25% unclaimed peak will
+			// be processed
+			{
+				Vector<Isotope> Unclaimed_Result = new Vector<Isotope>();
+
+				//Template Matching
+				//Unclaimed_Result = PeakMatchIsotope_H(UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI);
+				Unclaimed_Result = PeakMatchIsotope_HH(UnClaimedPeak,FWHM_gen,EnCoeff_Cali, WndROI, result2);
+
+
+				//Remove Peaks which was still remembered in memory in Java
+				Unclaimed_Result=IsoRemoveLines(Unclaimed_Result,UnClaimedPeak);
+
+
+				//resett actiivity
+				for(int i=0;i<Unclaimed_Result.size();i++)
+				{
+					Unclaimed_Result.get(i).Act=0;
+				}
+
+				//Re calcute confidence index
+				Unclaimed_Result = NewNcAnalsys.IndexFillter_H(Unclaimed_Result, FWHM_gen, EnCoeff_Cali, Eff_Coeff, WndROI,Thrshld_UnClaimed_Index1,Thrshld_UnClaimed_Index2);
+
+				//18.05.16: adding logic table C.E peak for Cs137 and Co60
+				Unclaimed_Result=NewNcAnalsys.LogicComptonPeakCs_Co60(Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+
+				result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+
+				//Condition for High enriched uranium
+				Unclaimed_Result=NewNcAnalsys.LogicHighEnricUranium(Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI);
+
+				//condition for WGPu and RGPu
+				Unclaimed_Result=NewNcAnalsys.AddCondition_WGPu_RGPU(Unclaimed_Result, UnClaimedPeak,FWHM_gen,	EnCoeff_Cali,WndROI);
+
+				// Step 1: Find best isotope with max number of line
+				if (Unclaimed_Result.size() > 0)
+				{
+					Unclaimed_Result = NewNcAnalsys.IsotopeID_UnClaimedLine(NewNcAnalsys.Smooth_Spc(ChSpec),Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(),	WndROI);
+
+					//Adding information
+					for (int i = 0; i < Unclaimed_Result.size(); i++)
+					{
+						Unclaimed_Result.get(i).Screening_Process=2;
+					}
+				}
+
+				// Step2 : Final calculation
+
+				if (Unclaimed_Result.size() > 0)
+				{
+
+					result2 = NewNcAnalsys.AddingIsotope(result2, Unclaimed_Result);
+
+					if (result2.size() > 0)
+					{
+						//18.05.16: adding logic table C.E peak for Cs137 and Co60
+						result2=NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+						result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+						result2=NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
+
+						result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2,mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI,Act_Thsold);
+					}
+				}
+
+			}
+
+		}
+
+		//Adding condition to prohibit WGPU by logic when RGPu is IDed
+		// Adding condition to prohibit Ra and Ba
+		if (result2.size() > 0) {
+			//result2=NewNcAnalsys.AddCondition_Ra_Ba(result2);
+			//result2=NewNcAnalsys.AddCondition_Ra_Ba(result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,WndROI,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ba-133", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "U-235", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "HEU", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ga-67", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "In-111", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//Co57 vs Eu152: Activty Ratio of Co57/Eu=11~15%, so take theshold 0.2
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152", "Co-57", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, 0.2);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152", "U-235", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_OtherIso);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "Tl-201", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_OtherIso);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "I-131", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//18.12.21
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "I-131", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//19.08.28
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "I-125", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//Adding more condition for Ra+Ba
+			//2019.09.02
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ba-133", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226_Ba133);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "In-111", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+
+			//2019.09.06
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "I-123", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Ga-67", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "Tl-201", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_OtherIso);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "I-125", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_OtherIso);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "I-123", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "Ga-67", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "I-125", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_OtherIso);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "I-123", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "Ga-67", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226", "U-233HE", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Th-232", "U-233HE", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//2019.10.31
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "Ga-67", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "In-111", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137", "I-131", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133", "Pu-239", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+
+			//Add for Th-232;2019/12/10
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Th-232", "F-18", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Th-232", "I-125", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Th-232", "U-233", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+			result2 = NewNcAnalsys.AddCondition_Exception_Isopte("Th-232", "Tc-99m", result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, 0.6, Eff_Coeff, SPC.Get_AcqTime(), Thrshld_Index2_MinorMajor_Ra226, ThrShld_Act_Except_Ra226);
+		}
+		//sTEP 4: Adding Minor Peak
+		//Adding Minor Peak for Showing
+		if (result2.size() > 0)
+		{
+			result2 = AddPeakDraw(result2,mFoundPeak_data,FWHM_gen,EnCoeff_Cali,WndROI);
+		}
+
+		//190917 test
+		//	AddPeakString(mFoundPeak_data);
+
 		return result2;
 	}// end Find_Isotopes_with_Energy
 
+	/*...............................................
+	 * Function for finding Peak and Source ID are implemented here.
+	 * Date: 201.03.05
+	 */
+	public Vector<Isotope> Find_Isotopes_with_Energy_old1(Spectrum SPC, Spectrum BG)
+
+	{
+
+		//190327
+		if(SPC.getFWHM()==null)
+		{
+			double [] FWHM_Fixed= new double []{ 1.2707811254, -1.5464537062 };
+			double WinROI_Fixed=0.6;
+			double[] Eff_Coeff_Fixed = new double[] { -0.027939138, 0.694026779, -6.627760069, 28.20796375, -48.74100729 };
+
+			SPC.setFWHM(FWHM_Fixed);
+			SPC.setWnd_Roi(WinROI_Fixed);
+			SPC.setFindPeakN_Coefficients(Eff_Coeff_Fixed);
+		}
+
+		if(BG.getFWHM()==null)
+		{
+			double [] FWHM_Fixed= new double []{ 1.2707811254, -1.5464537062 };
+			double WinROI_Fixed=0.6;
+			double[] Eff_Coeff_Fixed = new double[] { -0.027939138, 0.694026779, -6.627760069, 28.20796375, -48.74100729 };
+
+			BG.setFWHM(FWHM_Fixed);
+			BG.setWnd_Roi(WinROI_Fixed);
+			BG.setFindPeakN_Coefficients(Eff_Coeff_Fixed);
+		}
+
+		double Thrshld_Index1=0.95;
+		double Thrshld_Index2=0.9;
+		double Thrshld_UnClaimed_Index1=0.95;
+
+		double Thrshld_UnClaimed_Index2=0.5;	//should change Index2 to 0.5, before we set 0.2
+
+		//180727
+		double Thrshld_Index2_MinorMajor_Ra226=0.9; // Calculate confidence index for all minor and major
+		double ThrShld_Act_Except_Ra226=0.2; //increasing 0.1 to 0.2 (20%) for activity
+		double ThrShld_Act_Except_OtherIso=0.2; //increasing 0.1 to 0.2 (20%) for activity
+		double Act_Thsold=0.05; //5% // Actvity theshold
+		double  WndROI_CEPeak= 1.0;
+		double ThrShld_Act_Except_Ra226_Ba133=0.3;
+
+
+		Coefficients EnCoeff_Cali = SPC.Get_Coefficients();// Energy Calibration
+		// double[] FWHM_gen = new double[] { 1.2707811254, -1.5464537062 };
+		double WndROI = BG.getWnd_Roi();
+
+		double[] FWHM_gen = BG.getFWHM();
+
+		double[] Eff_Coeff = BG.getFindPeakN_Coefficients();
+
+
+
+		// Step 1: Processing: Find PeakInfor. BG Subtracted is minus in this step
+
+		Vector<NcPeak> mFoundPeak_data = NewNcAnalsys.Find_Peak(SPC, BG);
+
+		Vector<Isotope> result2 = new Vector<Isotope>();
+
+		if (mLoadCheck == false)
+			return result2;
+
+		// Step 2: ID Isotope by templete matching
+
+		// result2 = PeakMatchIsotope(mFoundPeak_data);
+
+		result2 = PeakMatchIsotope_H(mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
+
+		// Step 3: Applied Confidence filter
+		// result2 = IndexFillter(result2);
+		result2 = NewNcAnalsys.IndexFillter_H(result2, FWHM_gen, EnCoeff_Cali, Eff_Coeff, WndROI,Thrshld_Index1,Thrshld_Index2);
+
+		int CHSIZE = 1024;
+		double[] ChSpec = new double[CHSIZE];
+		for (int i = 0; i < SPC.Get_Ch_Size(); i++)
+		{
+			ChSpec[i] = SPC.at(i);
+		}
+
+
+
+		//18.05.16: adding logic table C.E peak for Cs137 and Co60
+		result2=NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+		result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+		result2=NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
+
+		//condition for WGPu and RGPu
+		result2=NewNcAnalsys.AddCondition_WGPu_RGPU(result2, mFoundPeak_data,FWHM_gen,	EnCoeff_Cali,WndROI);
+
+		//1st Screening Processing
+		// Step 4: Activity Calculation
+		if (result2.size() > 0) {
+			// result2 = NewNcAnalsys.CValue_Filter(NewNcAnalsys.Smooth_Spc(ChSpec),
+			// result2, mFoundPeak_data, FWHM_gen,Eff_Coeff, SPC.Get_AcqTime());
+			result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2, mFoundPeak_data, FWHM_gen,EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI,Act_Thsold);
+
+			//Adding information
+			for (int i = 0; i < result2.size(); i++)
+			{
+				result2.get(i).Screening_Process=1;
+			}
+
+		}
+
+		// Step 5: Last condition for validation isotope
+
+
+		// 2nd Sreening Processing
+		if (result2.size() >= 0)
+		{
+
+			Vector<NcPeak> UnClaimedPeak = NewNcAnalsys.CValue_Return_UnclaimedEn(NewNcAnalsys.Smooth_Spc(ChSpec),
+					result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI);
+
+			// condition
+			int NoFoundPeak = mFoundPeak_data.size();
+
+			int NoUnclaimedPeak = UnClaimedPeak.size();
+
+			double RatioPeak=(double)NoUnclaimedPeak/(double)NoFoundPeak;
+
+			if(RatioPeak>0.5) //Peak: 50% is unclaime peak
+			{
+				Act_Thsold=0.01; //1%
+			}
+
+
+			if (RatioPeak > 0.25) // at least more than 25% unclaimed peak will
+			// be processed
+			{
+				Vector<Isotope> Unclaimed_Result = new Vector<Isotope>();
+
+				//Template Matching
+				//Unclaimed_Result = PeakMatchIsotope_H(UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI);
+				Unclaimed_Result = PeakMatchIsotope_HH(UnClaimedPeak,FWHM_gen,EnCoeff_Cali, WndROI, result2);
+
+
+				//Remove Peaks which was still remembered in memory in Java
+				Unclaimed_Result=IsoRemoveLines(Unclaimed_Result,UnClaimedPeak);
+
+
+				//resett actiivity
+				for(int i=0;i<Unclaimed_Result.size();i++)
+				{
+					Unclaimed_Result.get(i).Act=0;
+				}
+
+				//Re calcute confidence index
+				Unclaimed_Result = NewNcAnalsys.IndexFillter_H(Unclaimed_Result, FWHM_gen, EnCoeff_Cali, Eff_Coeff, WndROI,Thrshld_UnClaimed_Index1,Thrshld_UnClaimed_Index2);
+
+				//18.05.16: adding logic table C.E peak for Cs137 and Co60
+				Unclaimed_Result=NewNcAnalsys.LogicComptonPeakCs_Co60(Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+
+				result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+
+				//Condition for High enriched uranium
+				Unclaimed_Result=NewNcAnalsys.LogicHighEnricUranium(Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, WndROI);
+
+				//condition for WGPu and RGPu
+				Unclaimed_Result=NewNcAnalsys.AddCondition_WGPu_RGPU(Unclaimed_Result, UnClaimedPeak,FWHM_gen,	EnCoeff_Cali,WndROI);
+
+				// Step 1: Find best isotope with max number of line
+				if (Unclaimed_Result.size() > 0)
+				{
+					Unclaimed_Result = NewNcAnalsys.IsotopeID_UnClaimedLine(NewNcAnalsys.Smooth_Spc(ChSpec),Unclaimed_Result, UnClaimedPeak, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(),	WndROI);
+
+					//Adding information
+					for (int i = 0; i < Unclaimed_Result.size(); i++)
+					{
+						Unclaimed_Result.get(i).Screening_Process=2;
+					}
+				}
+
+				// Step2 : Final calculation
+
+				if (Unclaimed_Result.size() > 0)
+				{
+
+					result2 = NewNcAnalsys.AddingIsotope(result2, Unclaimed_Result);
+
+					if (result2.size() > 0)
+					{
+						//18.05.16: adding logic table C.E peak for Cs137 and Co60
+						result2=NewNcAnalsys.LogicComptonPeakCs_Co60(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI_CEPeak);
+						result2=NewNcAnalsys.AddCondition_Cs_U233HE_U235HE(result2) ;
+						result2=NewNcAnalsys.LogicHighEnricUranium(result2, mFoundPeak_data, FWHM_gen, EnCoeff_Cali, WndROI);
+
+						result2 = NewNcAnalsys.CValue_Filter_H(NewNcAnalsys.Smooth_Spc(ChSpec), result2,mFoundPeak_data, FWHM_gen, EnCoeff_Cali, Eff_Coeff, SPC.Get_AcqTime(), WndROI,Act_Thsold);
+					}
+				}
+
+			}
+
+		}
+
+		//Adding condition to prohibit WGPU by logic when RGPu is IDed
+		// Adding condition to prohibit Ra and Ba
+		if (result2.size() > 0)
+		{
+			//result2=NewNcAnalsys.AddCondition_Ra_Ba(result2);
+			//result2=NewNcAnalsys.AddCondition_Ra_Ba(result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,WndROI,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","Ba-133",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","U-235",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","HEU",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","Ga-67",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","In-111",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			//Co57 vs Eu152: Activty Ratio of Co57/Eu=11~15%, so take theshold 0.2
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152","Co-57",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,0.2);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Eu-152","U-235",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_OtherIso);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","Tl-201",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_OtherIso);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","I-131",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			//18.12.21
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","I-131",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			//19.08.28
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137","I-125",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			//Adding more condition for Ra+Ba
+			//2019.09.02
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","Ba-133",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226_Ba133);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","In-111",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+
+			//2019.09.06
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","I-123",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","Ga-67",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","Tl-201",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_OtherIso);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","I-125",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_OtherIso);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","I-123",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","Ga-67",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ba-133","I-125",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_OtherIso);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137","I-123",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Cs-137","Ga-67",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Ra-226","U-233HE",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+			result2=NewNcAnalsys.AddCondition_Exception_Isopte("Th-232","U-233HE",result2,mFoundPeak_data, FWHM_gen,EnCoeff_Cali,0.6,Eff_Coeff, SPC.Get_AcqTime(),Thrshld_Index2_MinorMajor_Ra226,ThrShld_Act_Except_Ra226);
+
+		}
+
+		//sTEP 4: Adding Minor Peak
+		//Adding Minor Peak for Showing
+		if (result2.size() > 0)
+		{
+			result2 = AddPeakDraw(result2,mFoundPeak_data,FWHM_gen,EnCoeff_Cali,WndROI);
+		}
+
+		//190917 test
+	//	AddPeakString(mFoundPeak_data);
+
+		return result2;
+	}// end Find_Isotopes_with_Energy
 
 	private Vector<Isotope> Find_UnknownPeak(Vector<Isotope> FoundIsotopes, Vector<NcPeak> Peak_Data) {
 		Vector<Isotope> Result = new Vector<Isotope>();
@@ -944,11 +1270,11 @@ public class IsotopesLibrary {
 		 * if(FoundIsotopes.get(i).isotopes.matches("Ba-133")){ //if there is Ba133
 		 * for(int k=0; k<Result.size(); k++){
 		 * if(Result.get(k).Class.matches(".*UNK.*")){ // in UNKs
-		 * 
+		 *
 		 * Vector<NcPeak> TempPeak = Result.get(k).FoundPeaks; for(int q =0;
 		 * q<TempPeak.size();q++){
 		 * if(TempPeak.get(q).Energy_InWindow(161)){Result.remove(q);break;} }
-		 * 
+		 *
 		 * } } } }
 		 */
 
@@ -958,58 +1284,58 @@ public class IsotopesLibrary {
 		 * Energy[],int channel[], int VallyCh[],double VallyAB[], int Energy_Count){
 		 * Vector<Isotope> Result = new Vector<Isotope>(); if(FoundIsotopes == null)
 		 * return Result;
-		 * 
-		 * 
+		 *
+		 *
 		 * Result.addAll(FoundIsotopes); Vector<Integer> UnknownPeakArrayNum = new
 		 * Vector<Integer>();
-		 * 
-		 * 
+		 *
+		 *
 		 * ///1 boolean check =false; for(int i=0; i<Energy_Count; i++){ for(int k=0;
 		 * k<FoundIsotopes.size(); k++){
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy1 != 0){ double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(FoundIsotopes.get(k).Energy1); double
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); double R_ROI_Percent =
 		 * 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy1*L_ROI_Percent < Energy[i] &&
 		 * FoundIsotopes.get(k).Energy1*R_ROI_Percent > Energy[i]) check =true; }
 		 * if(FoundIsotopes.get(k).Energy2 != 0){ double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(FoundIsotopes.get(k).Energy2); double
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); double R_ROI_Percent =
 		 * 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy2*L_ROI_Percent < Energy[i] &&
 		 * FoundIsotopes.get(k).Energy2*R_ROI_Percent > Energy[i]) check =true;
-		 * 
+		 *
 		 * } if(FoundIsotopes.get(k).Energy3 != 0){ double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(FoundIsotopes.get(k).Energy3); double
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); double R_ROI_Percent =
 		 * 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy3*L_ROI_Percent < Energy[i] &&
 		 * FoundIsotopes.get(k).Energy3*R_ROI_Percent > Energy[i]) check =true;
-		 * 
+		 *
 		 * } if(FoundIsotopes.get(k).Energy4 != 0){ double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(FoundIsotopes.get(k).Energy4); double
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); double R_ROI_Percent =
 		 * 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy4*L_ROI_Percent < Energy[i] &&
 		 * FoundIsotopes.get(k).Energy4*R_ROI_Percent > Energy[i]) check =true;
-		 * 
+		 *
 		 * } if(FoundIsotopes.get(k).Energy5 != 0){ double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(FoundIsotopes.get(k).Energy5); double
 		 * L_ROI_Percent = 1.0-(Roi_window*0.01); double R_ROI_Percent =
 		 * 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(FoundIsotopes.get(k).Energy5*L_ROI_Percent < Energy[i] &&
 		 * FoundIsotopes.get(k).Energy5*R_ROI_Percent > Energy[i]) check =true;
-		 * 
+		 *
 		 * } } if(check == false) UnknownPeakArrayNum.add(i);
-		 * 
+		 *
 		 * check = false; } ///2 /*for(int i=0; i<FoundIsotopes.size(); i++){ // if() }
-		 * 
+		 *
 		 * ///3 for(int i=0; i<UnknownPeakArrayNum.size(); i++){ Isotope temp = new
 		 * Isotope(); temp.isotopes = "Uknown"; temp.Class ="UNK"; temp.Channel1 =
 		 * channel[UnknownPeakArrayNum.get(i)]; temp.Energy1 =
@@ -1018,7 +1344,7 @@ public class IsotopesLibrary {
 		 * VallyAB[(UnknownPeakArrayNum.get(i)*2)+1]; temp.Channel1_Vally.x =
 		 * VallyCh[(UnknownPeakArrayNum.get(i)*2)]; temp.Channel1_Vally.y =
 		 * VallyCh[(UnknownPeakArrayNum.get(i)*2)+1];
-		 * 
+		 *
 		 * Result.add(temp); } ///4 Ba-133 _ 161 kev Unkown for(int i=0;
 		 * i<FoundIsotopes.size(); i++){
 		 * if(FoundIsotopes.get(i).isotopes.matches("Ba-133")){ //if there is Ba133
@@ -1026,10 +1352,10 @@ public class IsotopesLibrary {
 		 * if(Result.get(k).Class.matches(".*UNK.*")){ // in UNKs double Roi_window =
 		 * NcLibrary.Get_Roi_window_by_energy(161); double L_ROI_Percent =
 		 * 1.0-(Roi_window*0.01); double R_ROI_Percent = 1.0+(Roi_window*0.01);
-		 * 
+		 *
 		 * if(161*L_ROI_Percent < Result.get(k).Energy1 &&161*R_ROI_Percent >
 		 * Result.get(k).Energy1){ Result.remove(k); break; } } } } }
-		 * 
+		 *
 		 * return Result; }
 		 */
 
@@ -1895,4 +2221,298 @@ public class IsotopesLibrary {
 		return result2;
 	}
 
+	public void AddPeakString(Vector<NcPeak> mFoundPeak_data)
+	{
+		IDspectrumActivity.foundPeak = "";
+		DecimalFormat format = new DecimalFormat();
+		format.applyLocalizedPattern("0");
+
+		String foundPeak = "Peak";
+						for (int q = 0; q < mFoundPeak_data.size(); q++)
+						{
+							double Entemp=mFoundPeak_data.get(q).Peak_Energy;
+							foundPeak = foundPeak +", "+format.format(Entemp) ;
+
+
+						}
+		IDspectrumActivity.foundPeak = foundPeak;
+
+
+						//return foundPeak;
+	}
+
+
+		//return result2;
+
+	public Vector<Isotope> PeakMatchIsotope_H(Vector<NcPeak> mFoundPeak_data, double[] FWHMCoeff, Coefficients coeff,
+											  double WndROI) {
+		// double [] EnCalCoeff=new double [3];
+		// EnCalCoeff[0] = coeff.get_Coefficients()[0];
+		// EnCalCoeff[1]= coeff.get_Coefficients()[1];
+		// EnCalCoeff[2]= coeff.get_Coefficients()[2];
+
+		Vector<Isotope> result2 = new Vector<Isotope>();
+		Isotope SourceInfo = new Isotope();
+		boolean check = false;
+		double Peak_Confidence_Value_sum = 0;
+		int PeakCnt = 0;
+
+		int CountPeak = 0;
+		double[] FoundMSEn = new double[10];
+		double[] FoundMSNet = new double[10];
+		double[] FoundSourceInfo = new double[10];
+		int index = 0;
+		double max1 = 0;
+
+		for (int i = 0; i < mSel_Library.size(); i++)
+		{
+
+			SourceInfo = mSel_Library.get(i);
+
+
+			//reset memory because in Java still keep information of previous step
+			SourceInfo = mSel_Library.get(i);
+
+			for(int ii=0;ii<SourceInfo.FoundPeaks.size();ii++)
+			{
+				SourceInfo.FoundPeaks.remove(ii);
+				ii--;
+			}
+
+
+			for(int ii=0;ii<SourceInfo.FoundPeakBR .size();ii++)
+			{
+				SourceInfo.FoundPeakBR.remove(ii);
+				ii--;
+			}
+
+
+			for(int ii=0;ii<SourceInfo.IsoPeakEn.size();ii++)
+			{
+				SourceInfo.IsoPeakEn.remove(ii);
+				ii--;
+			}
+			//if(SourceInfo.Index2<0||SourceInfo.Index2=0)
+			SourceInfo.Index1=0;
+			SourceInfo.Index2=0;
+
+			//End memory reset
+
+
+			for (int EnCnt = 0; EnCnt < SourceInfo.Peaks.size(); EnCnt++)
+			{
+
+				CountPeak = 0;
+				for (int k = 0; k < mFoundPeak_data.size(); k++)
+				{
+
+					boolean isIn = SourceInfo.Peaks.get(EnCnt).Energy_InWindow_H(mFoundPeak_data.get(k).Peak_Energy,
+							FWHMCoeff, coeff, WndROI);
+
+					if (isIn) {
+						FoundMSEn[CountPeak] = mFoundPeak_data.get(k).Peak_Energy;
+						FoundMSNet[CountPeak] = mFoundPeak_data.get(k).NetCnt;
+						CountPeak = CountPeak + 1;
+					}
+				}
+
+				if (CountPeak > 0) {
+					max1 = 0.0;
+					for (int j = 0; j < CountPeak; j++)
+					{
+						if (FoundMSNet[j] > max1)
+						{
+							max1 = FoundMSNet[j];
+							index = j;
+						}
+					}
+
+					// adding to source infor
+
+					for (int k = 0; k < mFoundPeak_data.size(); k++)
+					{
+
+						boolean isIn = SourceInfo.Peaks.get(EnCnt).Energy_InWindow_H(mFoundPeak_data.get(k).Peak_Energy,
+								FWHMCoeff, coeff, WndROI);
+
+						if (isIn) {
+							if (FoundMSEn[index] == mFoundPeak_data.get(k).Peak_Energy)
+							{
+								Peak_Confidence_Value_sum += NewNcAnalsys.Confidence_Level_Cal(mFoundPeak_data.get(k).Peak_Energy,
+										SourceInfo.Peaks.get(EnCnt).Peak_Energy);
+
+								SourceInfo.FoundPeaks.add(mFoundPeak_data.get(k));
+
+								SourceInfo.FoundPeakBR.add(SourceInfo.Peaks.get(EnCnt).Isotope_Gamma_En_BR);
+
+								SourceInfo.IsoPeakEn.add(SourceInfo.Peaks.get(EnCnt).Peak_Energy);
+
+								PeakCnt++;
+
+								break;
+							}
+						}
+					}
+
+				}
+
+			}
+			if (PeakCnt != 0) {
+
+				PeakCnt = 0;
+
+				SourceInfo.Confidence_Level = Peak_Confidence_Value_sum / SourceInfo.Get_OnlyIdEnergy_Cnt();
+
+				result2.add(SourceInfo);
+
+			}
+			Peak_Confidence_Value_sum = 0;
+			check = false;
+
+		}
+		return result2;
+	}
+
+
+	//Because memory always keep in Java
+	public Vector<Isotope> PeakMatchIsotope_HH(Vector<NcPeak> mFoundPeak_data, double[] FWHMCoeff, Coefficients coeff,double WndROI,Vector<Isotope> MainResult)
+	{
+		// double [] EnCalCoeff=new double [3];
+		// EnCalCoeff[0] = coeff.get_Coefficients()[0];
+		// EnCalCoeff[1]= coeff.get_Coefficients()[1];
+		// EnCalCoeff[2]= coeff.get_Coefficients()[2];
+
+		Vector<Isotope> result2 = new Vector<Isotope>();
+		Isotope SourceInfo = new Isotope();
+		boolean check = false;
+		double Peak_Confidence_Value_sum = 0;
+		int PeakCnt = 0;
+
+		int CountPeak = 0;
+		double[] FoundMSEn = new double[10];
+		double[] FoundMSNet = new double[10];
+		double[] FoundSourceInfo = new double[10];
+		int index = 0;
+		double max1 = 0;
+
+		for (int i = 0; i < mSel_Library.size(); i++)
+		{
+
+			SourceInfo = mSel_Library.get(i);
+
+			//START: reset memory....
+			//reset memory because in Java still keep information of previous step
+			SourceInfo = mSel_Library.get(i);
+
+			boolean FlgSrc=false;
+			for (int nosrc=0;nosrc<MainResult.size();nosrc++)
+			{
+				if (MainResult.get(nosrc).isotopes.equals(SourceInfo.isotopes))
+				{
+					FlgSrc=true;
+				}
+			}
+
+			if(FlgSrc==false)
+			{
+				for(int ii=0;ii<SourceInfo.FoundPeaks.size();ii++)
+				{
+					SourceInfo.FoundPeaks.remove(ii);
+					ii--;
+				}
+
+
+				for(int ii=0;ii<SourceInfo.FoundPeakBR .size();ii++)
+				{
+					SourceInfo.FoundPeakBR.remove(ii);
+					ii--;
+				}
+
+
+				for(int ii=0;ii<SourceInfo.IsoPeakEn.size();ii++)
+				{
+					SourceInfo.IsoPeakEn.remove(ii);
+					ii--;
+				}
+				//if(SourceInfo.Index2<0||SourceInfo.Index2=0)
+				SourceInfo.Index1=0;
+				SourceInfo.Index2=0;
+			}
+
+			//End memory reset
+
+
+			for (int EnCnt = 0; EnCnt < SourceInfo.Peaks.size(); EnCnt++)
+			{
+
+				CountPeak = 0;
+				for (int k = 0; k < mFoundPeak_data.size(); k++)
+				{
+
+					boolean isIn = SourceInfo.Peaks.get(EnCnt).Energy_InWindow_H(mFoundPeak_data.get(k).Peak_Energy,
+							FWHMCoeff, coeff, WndROI);
+
+					if (isIn) {
+						FoundMSEn[CountPeak] = mFoundPeak_data.get(k).Peak_Energy;
+						FoundMSNet[CountPeak] = mFoundPeak_data.get(k).NetCnt;
+						CountPeak = CountPeak + 1;
+					}
+				}
+
+				if (CountPeak > 0) {
+					max1 = 0.0;
+					for (int j = 0; j < CountPeak; j++)
+					{
+						if (FoundMSNet[j] > max1)
+						{
+							max1 = FoundMSNet[j];
+							index = j;
+						}
+					}
+
+					// adding to source infor
+
+					for (int k = 0; k < mFoundPeak_data.size(); k++)
+					{
+
+						boolean isIn = SourceInfo.Peaks.get(EnCnt).Energy_InWindow_H(mFoundPeak_data.get(k).Peak_Energy,
+								FWHMCoeff, coeff, WndROI);
+
+						if (isIn) {
+							if (FoundMSEn[index] == mFoundPeak_data.get(k).Peak_Energy)
+							{
+								Peak_Confidence_Value_sum += NewNcAnalsys.Confidence_Level_Cal(mFoundPeak_data.get(k).Peak_Energy,
+										SourceInfo.Peaks.get(EnCnt).Peak_Energy);
+
+								SourceInfo.FoundPeaks.add(mFoundPeak_data.get(k));
+
+								SourceInfo.FoundPeakBR.add(SourceInfo.Peaks.get(EnCnt).Isotope_Gamma_En_BR);
+
+								SourceInfo.IsoPeakEn.add(SourceInfo.Peaks.get(EnCnt).Peak_Energy);
+
+								PeakCnt++;
+
+								break;
+							}
+						}
+					}
+
+				}
+
+			}
+			if (PeakCnt != 0) {
+
+				PeakCnt = 0;
+
+				SourceInfo.Confidence_Level = Peak_Confidence_Value_sum / SourceInfo.Get_OnlyIdEnergy_Cnt();
+
+				result2.add(SourceInfo);
+
+			}
+			Peak_Confidence_Value_sum = 0;
+			check = false;
+
+		}
+		return result2;
+	}
 }// end class

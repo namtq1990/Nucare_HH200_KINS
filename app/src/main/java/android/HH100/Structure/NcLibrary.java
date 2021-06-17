@@ -89,7 +89,7 @@ public class NcLibrary {
 	public static int NoMaxK40=20;
 	public static double SignalMin=0.5;
 	public static double ThesholdPeak=0.9;
-	public static int GAIN_THRESHOLD_CNT=200;
+	public static int GAIN_THRESHOLD_CNT=400; // Default :20 sec
 	public static int mFail_time=300;
 
 	public static HashMap<String, Object> hashMap = new HashMap<String, Object>();
@@ -3331,13 +3331,13 @@ public class NcLibrary {
 							|| (sender_server == null || sender_server.length() <= 1)) {
 						
 						 * pref.Set_sender_Server("mail.kins.re.kr"); pref.Set_sender_Port("587");
-						 * pref.Set_sender_pw("rpm0356##"); pref.Set_sender_email("kinsrpm@kins.re.kr");
-						 * pref.Set_recv_address("kinsrpm@kins.re.kr");
+						 * pref.Set_sender_pw("rpm0356##"); pref.Set_sender_email("nucare@nucaremed.com");
+						 * pref.Set_recv_address("nucare@nucaremed.com");
 						 
 
-						sender = "kinsrpm@kins.re.kr";
+						sender = "nucare@nucaremed.com";
 						sender_pw = "rpm0356##";
-						recv_mail = "kinsrpm@kins.re.kr";
+						recv_mail = "nucare@nucaremed.com";
 						server = "mail.kins.re.kr";
 						sender_port = "587";
 						sender_server = "mail.kins.re.kr";
@@ -3345,8 +3345,8 @@ public class NcLibrary {
 						pref.Set_sender_Server("mail.kins.re.kr");
 						pref.Set_sender_Port("587");
 						pref.Set_sender_pw("rpm0356##");
-						pref.Set_sender_email("kinsrpm@kins.re.kr");
-						pref.Set_recv_address("kinsrpm@kins.re.kr");
+						pref.Set_sender_email("nucare@nucaremed.com");
+						pref.Set_recv_address("nucare@nucaremed.com");
 
 					}
 
@@ -3440,16 +3440,16 @@ public class NcLibrary {
 						if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1)
 								|| (recv_mail == null || recv_mail.length() <= 1)
 								|| (server == null || server.length() <= 1)) {
-							sender = "kinsrpm@kins.re.kr";
+							sender = "nucare@nucaremed.com";
 							sender_pw = "rpm0356##";
-							recv_mail = "kinsrpm@kins.re.kr";
+							recv_mail = "nucare@nucaremed.com";
 							server = "mail.kins.re.kr";
 
 							pref.Set_sender_Server("mail.kins.re.kr");
 							pref.Set_sender_Port("587");
 							pref.Set_sender_pw("rpm0356##");
-							pref.Set_sender_email("kinsrpm@kins.re.kr");
-							pref.Set_recv_address("kinsrpm@kins.re.kr");
+							pref.Set_sender_email("nucare@nucaremed.com");
+							pref.Set_recv_address("nucare@nucaremed.com");
 
 						}
 						
@@ -3657,7 +3657,7 @@ public class NcLibrary {
 								|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
 							sender = "inseon.ahn@nucaremed.com";
 							sender_pw = "dksdlstjs233";
-							recv_mail = "kinsrpm@kins.re.kr";
+							recv_mail = "nucare@nucaremed.com";
 							sender_server = "mail.nucaremed.com";
 							sender_port = "587";
 
@@ -3666,7 +3666,7 @@ public class NcLibrary {
 							pref.Set_sender_Port("587");
 							pref.Set_sender_pw("dksdlstjs233");
 							pref.Set_sender_email("inseon.ahn@nucaremed.com");
-							pref.Set_recv_address("kinsrpm@kins.re.kr");
+							pref.Set_recv_address("nucare@nucaremed.com");
 							
 
 						}
@@ -3675,7 +3675,7 @@ public class NcLibrary {
 			
 						
 						final EventDBOper db = new EventDBOper();
-						EventData m_EventData = db.Load_Event(db.GetEventCount() - 1);
+						m_EventData = db.Load_Event(db.GetEventCount() - 1);
 				
 						//db.OpenDB();
 						final Mail m = new Mail(sender, sender_pw, sender_server, sender_port);
@@ -3812,7 +3812,7 @@ public class NcLibrary {
 				switch (msg.what)
 				{
 					case 0:
-						m_EventData.reachBackSuccess = true;
+					//	m_EventData.reachBackSuccess = true;
 						Show_Dlg1(context.getResources().getString(R.string.email_transmit_success).toString(), context);
 						break;
 					case 1:
@@ -3847,8 +3847,6 @@ public class NcLibrary {
 			{
 				super.run();
 
-
-
 				mHandler.sendEmptyMessage(7); //progressbar show
 
 				EventDBOper mEventDB = new EventDBOper();
@@ -3868,7 +3866,7 @@ public class NcLibrary {
 							|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
 						sender = "inseon.ahn@nucaremed.com";
 						sender_pw = "dksdlstjs233";
-						recv_mail = "kinsrpm@kins.re.kr";
+						recv_mail = "nucare@nucaremed.com";
 						sender_server = "mail.nucaremed.com";
 						sender_port = "587";
 
@@ -3876,7 +3874,7 @@ public class NcLibrary {
 						pref.Set_sender_Port("587");
 						pref.Set_sender_pw("dksdlstjs233");
 						pref.Set_sender_email("inseon.ahn@nucaremed.com");
-						pref.Set_recv_address("kinsrpm@kins.re.kr");
+						pref.Set_recv_address("nucare@nucaremed.com");
 					}
 
 					final Mail m = new Mail(sender, sender_pw, sender_server, sender_port);
@@ -3922,7 +3920,7 @@ public class NcLibrary {
 							NcLibrary.Write_ExceptionLog("\nNcLibrary Line 3809 file == null");
 							mPrgDlg.dismiss();
 							mHandler.sendEmptyMessage(4);
-							return;
+							//return;
 						}
 
 						if (IsPhotoSave) {
@@ -3978,9 +3976,18 @@ public class NcLibrary {
 					try {
 						if (m.send()) {
 							m_EventData.reachBackSuccess = true;
+                            int idx = DBMng.GetInst(context).loadReahBackDB(m_EventData.Event_Date, m_EventData.StartTime);
+                            if (idx == -1) {
+                                DBMng.GetInst(context).writeReachBackDB(m_EventData);
+                            }
+                            else {
+                                DBMng.GetInst(context).updateReachBack(idx, m_EventData.reachBackPic, m_EventData.reachBackXml, m_EventData.reachBackSuccess+"");
+                            }
+
 							mPrgDlg.dismiss();
 							Log.v("Forgot Password mail", "Success");
 							mHandler.sendEmptyMessage(0);
+
 							Thread.currentThread().interrupt();
 
 						} else {
@@ -4001,14 +4008,8 @@ public class NcLibrary {
 
 				}};
 
-		thread.start();
+			thread.start();
 
-		try {
-			// 해당 쓰레드가 멈출때까지 멈춤
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 			return m_EventData;
 
 
@@ -4080,7 +4081,6 @@ public class NcLibrary {
 
 				mHandler.sendEmptyMessage(7); //progressbar show
 				m_EventData = DBMng.GetInst(context).loadReachBackDB(_id);
-
 				if (m_EventData != null)
 				{
 					PreferenceDB pref = new PreferenceDB(context);
@@ -4094,7 +4094,7 @@ public class NcLibrary {
 							|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
 						sender = "inseon.ahn@nucaremed.com";
 						sender_pw = "dksdlstjs233";
-						recv_mail = "kinsrpm@kins.re.kr";
+						recv_mail = "nucare@nucaremed.com";
 						sender_server = "mail.nucaremed.com";
 						sender_port = "587";
 
@@ -4102,7 +4102,7 @@ public class NcLibrary {
 						pref.Set_sender_Port("587");
 						pref.Set_sender_pw("dksdlstjs233");
 						pref.Set_sender_email("inseon.ahn@nucaremed.com");
-						pref.Set_recv_address("kinsrpm@kins.re.kr");
+						pref.Set_recv_address("nucare@nucaremed.com");
 					}
 
 					final Mail m = new Mail(sender, sender_pw, sender_server, sender_port);
@@ -4143,6 +4143,24 @@ public class NcLibrary {
 									m.addAttachment(m_EventData.reachBackXml, m_EventData.Event_Date + "_" + m_EventData.StartTime + "(" + m_EventData.mInstrument_Name + ").xml");
 									n42FileTemp = false;
 									//Log.e("ahn", "File Size :" + size);
+								}
+
+							}
+							else
+							{
+								String path = NcLibrary.Event_XML.WriteXML_toANSI42(m_EventData, m_EventData.Event_Date+ "_" + m_EventData.StartTime + "(" + m_EventData.mInstrument_Name + ").xml", IDSpectrumMode,name);
+								if(!path.equals(""))
+								{
+									n42 = new File(m_EventData.reachBackXml);
+									if (n42 != null && n42.exists()) {
+										Long size = n42.length();
+										if (size != 0) {
+											m.addAttachment(m_EventData.reachBackXml, m_EventData.Event_Date + "_" + m_EventData.StartTime + "(" + m_EventData.mInstrument_Name + ").xml");
+											n42FileTemp = false;
+											//Log.e("ahn", "File Size :" + size);
+										}
+
+									}
 								}
 
 							}
@@ -4215,12 +4233,12 @@ public class NcLibrary {
 							mPrgDlg.dismiss();
 							Log.v("Forgot Password mail", "Success");
 							mHandler.sendEmptyMessage(0);
-							Thread.currentThread().interrupt();
+							//Thread.currentThread().interrupt();
 
 						} else {
 							mPrgDlg.dismiss();
 							Log.v("Forgot Password mail", "Not Success");
-							Thread.currentThread().interrupt();
+							//Thread.currentThread().interrupt();
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -4244,12 +4262,6 @@ public class NcLibrary {
 
 		thread.start();
 
-		try {
-			// 해당 쓰레드가 멈출때까지 멈춤
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		return m_EventData;
 
 
@@ -4301,7 +4313,7 @@ public class NcLibrary {
 								|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
 							sender = "inseon.ahn@nucaremed.com";
 							sender_pw = "dksdlstjs233";
-							recv_mail = "kinsrpm@kins.re.kr";
+							recv_mail = "nucare@nucaremed.com";
 							sender_server = "mail.nucaremed.com";
 							sender_port = "587";
 
@@ -4309,7 +4321,7 @@ public class NcLibrary {
 							pref.Set_sender_Port("587");
 							pref.Set_sender_pw("dksdlstjs233");
 							pref.Set_sender_email("inseon.ahn@nucaremed.com");
-							pref.Set_recv_address("kinsrpm@kins.re.kr");
+							pref.Set_recv_address("nucare@nucaremed.com");
 							
 
 						}
@@ -4506,16 +4518,16 @@ public class NcLibrary {
 							if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1)
 									|| (recv_mail == null || recv_mail.length() <= 1)
 									|| (server == null || server.length() <= 1)) {
-								sender = "kinsrpm@kins.re.kr";
+								sender = "nucare@nucaremed.com";
 								sender_pw = "rpm0356##";
-								recv_mail = "kinsrpm@kins.re.kr";
+								recv_mail = "nucare@nucaremed.com";
 								server = "mail.kins.re.kr";
 
 								pref.Set_sender_Server("mail.kins.re.kr");
 								pref.Set_sender_Port("587");
 								pref.Set_sender_pw("rpm0356##");
-								pref.Set_sender_email("kinsrpm@kins.re.kr");
-								pref.Set_recv_address("kinsrpm@kins.re.kr");
+								pref.Set_sender_email("nucare@nucaremed.com");
+								pref.Set_recv_address("nucare@nucaremed.com");
 
 							}*/
 							
@@ -4719,7 +4731,7 @@ public class NcLibrary {
 		mPrefDB.Set_sender_Server("mail.kins.re.kr");
 		mPrefDB.Set_sender_Port("587");
 		mPrefDB.Set_sender_pw("rpm0356##");
-		mPrefDB.Set_sender_email("kinsrpm@kins.re.kr");
+		mPrefDB.Set_sender_email("nucare@nucaremed.com");
 		mPrefDB.Set_recv_address("inseon.ahn@nucaremed.com");
 
 	}
@@ -4782,7 +4794,31 @@ public class NcLibrary {
 
 	//	return true;
 	}
+	public static void SaveText_HNM(String data)
+	{
 
+		Calendar calendar = Calendar.getInstance();
+		Date date = calendar.getTime();
+		String Today = (new SimpleDateFormat("MM-dd_HH:mm:ss").format(date));
+
+		File sdcard = Environment.getExternalStorageDirectory();
+		File dbpath = new File(sdcard.getAbsolutePath());
+		String dbfile = dbpath.getAbsolutePath() + File.separator + "hh200gc.txt";
+
+		Today =Today+"  "+ data + "  ";
+		try {
+			FileOutputStream fos = new FileOutputStream(dbfile, true);
+			fos.write(Today.getBytes());
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		//	return true;
+	}
 	public static void SaveText1(String fileName, String data)
 	{
 
@@ -5055,35 +5091,32 @@ public class NcLibrary {
 				{
 					public void onClick(DialogInterface dialog, int whichButton)
 					{
-						EventData reachBack =  NcLibrary.SendEmail( false,context,  id,false);
-						if(evetList)
+						//EventData reachBack =  NcLibrary.SendEmail( false, context,  id,false);
+						NcLibrary.SendEmail( false, context,  id,false);
+						/*	if(evetList)
 						{
-							if(reachBack!=null)
+
+						if(reachBack!=null)
 							{
 								int idx = DBMng.GetInst(context).loadReahBackDB(reachBack.Event_Date, reachBack.StartTime);
-								if (idx == -1)
-								{
+								if (idx == -1) {
 									DBMng.GetInst(context).writeReachBackDB(reachBack);
 								}
-								else
-								{
+								else {
 									DBMng.GetInst(context).updateReachBack(idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess+"");
 								}
-							}
+							}*/
 						}
-						else
+					/*	else
 						{
-							//public static void SendEmail( final boolean IDSpectrumMode,final Context context , final  int _id)
 							//180827 수정
-
-							if (reachBack != null)
-							{
+							if (reachBack != null) {
 								DBMng.GetInst(context).writeReachBackDB(reachBack);
 							}
-						}
+						}*/
 
 
-					}
+				//	}
 				});
 				dialogBuilder.setCancelable(false);
 				dialogBuilder.show();

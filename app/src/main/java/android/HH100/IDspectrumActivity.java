@@ -218,6 +218,7 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 
 	public static String Path = "";
 
+	public static String foundPeak = "";
 	public interface Check {
 
 		int IdResult_Checked = 0;
@@ -1647,8 +1648,7 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 					//NcLibrary의 SendEmail 안에있던 인터넷 체크 맨앞으로 뺌
 					//기존에는 인터넷 연결이 안되어있으면 바로 오류메세지 팝업 -> 이벤트 로그 저장
 					//현재는 리치백 로그에도 저장이 되어야하기때문에 변경
-					if (!NcLibrary.isNetworkOnline(mContext))
-					{
+					if (!NcLibrary.isNetworkOnline(mContext)) {
 						EventDBOper mEventDB = new EventDBOper();
 						mEventDB.OpenDB();
 						EventData eventdata = mEventDB.LoadEventDB(mEventNumber);
@@ -1678,25 +1678,16 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 					}
 					else
 					{
-						EventData reachBack = NcLibrary.SendEmail( true,IDspectrumActivity.this,  mEventNumber,true);
+						 NcLibrary.SendEmail( true,IDspectrumActivity.this,  mEventNumber,true);
+					/*	EventData reachBack = NcLibrary.SendEmail( true,IDspectrumActivity.this,  mEventNumber,true);
+						if(reachBack!=null) {
 
-						int idx = DBMng.GetInst(IDspectrumActivity.this).loadReahBackDB(reachBack.Event_Date, reachBack.StartTime);
-						if (idx == -1)
-						{
-							DBMng.GetInst(IDspectrumActivity.this).writeReachBackDB(reachBack);
-						}
-						else
-						{
-							DBMng.GetInst(IDspectrumActivity.this).updateReachBack(idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess+"");
-						}
-
-/*						if (reachBack != null)
-						{
-							DBMng.GetInst(IDspectrumActivity.this).writeReachBackDB(reachBack);
-						}
-						else
-						{
-							NcLibrary.Show_Dlg1(IDspectrumActivity.this.getResources().getString(R.string.email_transmit_error).toString(), IDspectrumActivity.this);
+							int idx = DBMng.GetInst(IDspectrumActivity.this).loadReahBackDB(reachBack.Event_Date, reachBack.StartTime);
+							if (idx == -1) {
+								DBMng.GetInst(IDspectrumActivity.this).writeReachBackDB(reachBack);
+							} else {
+								DBMng.GetInst(IDspectrumActivity.this).updateReachBack(idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess + "");
+							}
 						}*/
 					}
 
@@ -2089,7 +2080,6 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 								eventdata.reachBackPic = "";
 							}
 						}
-                      //  DBMng.GetInst(IDspectrumActivity.this).writeReachBackDB(eventdata);
 
 						int idx = DBMng.GetInst(IDspectrumActivity.this).loadReahBackDB(eventdata.Event_Date, eventdata.StartTime);
 						if (idx <= 0)
@@ -2216,7 +2206,7 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			if (convertView == null)
+		/*	if (convertView == null)
 			{
 				LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.id_result_row, parent, false);
@@ -2232,7 +2222,24 @@ public class IDspectrumActivity extends Activity implements View.OnTouchListener
 			else
 			{
 				mHolder = (ListHolder) convertView.getTag();
-			}
+			}*/
+
+		//if (convertView == null)
+		//	{
+				LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(R.layout.id_result_row, parent, false);
+
+				mHolder = new ListHolder();
+
+				mHolder.nuclide1= (TextView) convertView.findViewById(R.id.NuclideTxt);
+				mHolder.nuclide2= (TextView) convertView.findViewById(R.id.NuclideTxt2);
+				mHolder.doserate= (TextView) convertView.findViewById(R.id.DoserateTxt);
+				mHolder.level= (TextView) convertView.findViewById(R.id.LevelTxt);
+				convertView.setTag(mHolder);
+		//	}
+	//		else {
+				mHolder = (ListHolder) convertView.getTag();
+	//		}
 
 			mHolder.idx = position;
 			mHolder.nuclide1.setText(arrIsotope.get(mHolder.idx).Class);

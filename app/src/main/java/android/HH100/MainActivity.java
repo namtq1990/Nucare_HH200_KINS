@@ -50,6 +50,7 @@ import android.HH100.Structure.EventData;
 import android.HH100.Structure.GCData;
 import android.HH100.Structure.NcLibrary;
 import android.HH100.Structure.NcPeak;
+import android.HH100.Structure.ReadDetectorData;
 import android.HH100.Structure.SingleMediaScanner;
 import android.HH100.Structure.Spectrum;
 import android.HH100.Structure.Detector.HwPmtProperty_Code;
@@ -179,6 +180,7 @@ public class MainActivity extends TabActivity
 	public static final int MESSAGE_READ_LA = 24;
 	public static final int MESSAGE_READ_BATTERY = 25;
 	public static final int MESSAGE_READ_DETECTOR_DATA = 26;
+	public static final int MESSAGE_READ_DETECTOR_DATA1 = 55;
 	public static final int MESSAGE_SAVE_EVENT = 27;
 	public static final int MESSAGE_MEDIA_SCAN = 28;
 	public static final int MESSAGE_READ_GC = 29;
@@ -186,6 +188,7 @@ public class MainActivity extends TabActivity
 
 	public static final int MESSAGE_NEUTRON_RECV = 31;
 	public static final int MESSAGE_READ_SERIAL_DATA = 33; //181102 추가
+	public static final  int MESSAGE_READ_DETECTOR_DATA_J3 = 34; //190123 j3 데이터 (400바이트*7 ) + 시간데이터 처리
 
 	public static final int MESSAGE_WRITE = 3;
 	public static final int MESSAGE_CONNECTED_DEVICE_INFO = 4;
@@ -222,8 +225,8 @@ public class MainActivity extends TabActivity
 
 	boolean IsDebugMode = true;
 
-	public int mGain_restTime_under1=150; // stabilization rest time if K40diff <= 1%
-	public int mGain_restTime_under2=60; // stabilization rest time if K40diff <= 2%
+	public int mGain_restTime_under1=10; // stabilization rest time if K40diff <= 1%
+	public int mGain_restTime_under2=10; // stabilization rest time if K40diff <= 2%
 	public int mGain_restTime_over2=10; // stabilization rest time if K40diff > 2%
 
 
@@ -244,6 +247,7 @@ public class MainActivity extends TabActivity
 	public static Detector mDetector = new Detector();
 	int count = 0;
 	public static String NewGC;
+
 	//
 	public static PreferenceDB mPrefDB = null;
 
@@ -271,7 +275,7 @@ public class MainActivity extends TabActivity
 	private NormalDB mNormalDB;
 	public static EventDBOper mEventDB;
 
-	private MediaPlayer mAlarmSound;
+	public static MediaPlayer mAlarmSound;
 
 	private ProgressDialog mProgressDialog = null;
 	private static Context mContext;
@@ -385,6 +389,16 @@ public class MainActivity extends TabActivity
 
 	TimerTask ShutDownTimeTask;
 	Timer ShutDownTimer;
+
+	int sendGcValue = 33000;
+	boolean IsSpcSaved = false;
+	boolean temp = false;
+	public int mTimeSpcCollect=0;
+	public int mTimeSpcCollect1=0;
+	TimerTask mSendGSTask;
+	int mTimeTaskcount = 0;;
+	Timer mSendGSTimer;
+	String saveSpc = "";
 
 	public interface Tab_Name {
 
@@ -755,8 +769,11 @@ public class MainActivity extends TabActivity
 
 							switch (resultGc) {
 							case 0: // <1%
-								str = ("under1%  Old ch," + Old_calib_peaks[0] + "," + Old_calib_peaks[1] + "," + Old_calib_peaks[2] + ",findNewK40," + K40Peak + ",GCValueNew," + mDetector.mHW_GC + "\n");
+								str = ("under1%  Old ch," + Old_calib_peaks[0] + "," + Old_calib_peaks[1] + "," + Old_calib_peaks[2] + ",findNewK40," + K40Peak + ",GCValueNew," + mDetector.mHW_GC + ",HV,"+mDetector.hv+"\n");
+								//str = ("under1%  Old ch," + Old_calib_peaks[0] + "," + Old_calib_peaks[1] + "," + Old_calib_peaks[2] + ",findNewK40," + K40Peak + ",GCValueNew," + mDetector.mHW_GC +",HighVoltage,"+ "\n");
 								NcLibrary.SaveText(str);
+								//NcLibrary.SaveText_HNM(str);
+
 								break;
 
 							case 1: // 1% < < 2%
@@ -788,8 +805,9 @@ public class MainActivity extends TabActivity
 
 								/////////////////////////////////////////////
 								 //파일안에 문자열 쓰기
-								str=("over1% Old ch," + Old_calib_peaks[0]+","+Old_calib_peaks[1]+","+Old_calib_peaks[2]+","+"findNewK40,"+newK40Peak+",GCValueNew,"+mDetector.mHW_GC+ "\n");
+								str=("over1% Old ch," + Old_calib_peaks[0]+","+Old_calib_peaks[1]+","+Old_calib_peaks[2]+","+"findNewK40,"+newK40Peak+ ",GCValueNew," + mDetector.mHW_GC + ",HV,"+mDetector.hv+"\n");
 								 NcLibrary.SaveText(str);
+								//NcLibrary.SaveText_HNM(str);
 								 //////////////////////////////////////////
 
 								FitParam = new double[3];
@@ -832,8 +850,9 @@ public class MainActivity extends TabActivity
 
 								/////////////////////////////////////////////
 								// 파일안에 문자열 쓰기
-								str=("over2%, Old ch,"+Old_calib_peaks[0]+","+Old_calib_peaks[1]+","+Old_calib_peaks[2]+","+"findNewK40,"+newK40Peak+",GCValueNew,"+mDetector.mHW_GC + "\n");
+								str=("over2%, Old ch,"+Old_calib_peaks[0]+","+Old_calib_peaks[1]+","+Old_calib_peaks[2]+","+"findNewK40,"+newK40Peak+ ",GCValueNew," + mDetector.mHW_GC + ",HV,"+mDetector.hv+"\n");
 								NcLibrary.SaveText(str);
+								//NcLibrary.SaveText_HNM(str);
 								 //////////////////////////////////////////
 
 								En_coeff = new Coefficients(FitParam);
@@ -1155,14 +1174,7 @@ public class MainActivity extends TabActivity
 						//GC
 						str=Integer.toString(caliChInfo[3]);
 						GcBytes2 = new java.math.BigInteger(str, 10).toByteArray();
-//						if(GcBytes2.length==1)
-//						{	ss2[8] = GcBytes2[0];
-//							ss2[9] = 0;
-//						}else
-//						{ 	ss2[8] =GcBytes2[1];
-//							ss2[9] = GcBytes2[0];
-//						}
-//						
+
 						/////////////////
 						if (GcBytes2.length == 1) {
 							ss2[8] = GcBytes2[2];
@@ -1175,8 +1187,6 @@ public class MainActivity extends TabActivity
 							ss2[9] = GcBytes2[0];
 						}
 
-						///
-						//ss[4] = (byte) Byte.valueOf((byte) 1);
 
 
 
@@ -1197,7 +1207,188 @@ public class MainActivity extends TabActivity
 
 					break;
 					////////////////////////////////
+					case MSG_FIXED_GC_SEND1:
 
+						if(!temp)
+						{
+						//	temp = true;
+							int[] caliChInfo1= {0,0,0,0};
+
+							caliChInfo1=NcLibrary.GetTextCli(MainActivity.FilenameCaliInfo, 4);
+							if(caliChInfo1[0] >0)
+							{	byte[] ss2 = new byte[10];
+								ss2[0] = 'C';
+								ss2[1] = 'S';
+								String str="";
+								//Cs137 32kev
+								str=Integer.toString(caliChInfo1[2]);
+								byte[] GcBytes2 = new java.math.BigInteger(str, 10).toByteArray();
+								if(GcBytes2.length==1)
+								{	ss2[2] = GcBytes2[0];
+									ss2[3] =0;
+								}else
+								{ 	ss2[2] =GcBytes2[1];
+									ss2[3] =  GcBytes2[0];
+								}
+								//Cs137 662kev
+								str=Integer.toString(caliChInfo1[0]);
+								GcBytes2 = new java.math.BigInteger(str, 10).toByteArray();
+								if(GcBytes2.length==1)
+								{	ss2[4] = GcBytes2[0];
+									ss2[5] = 0;
+								}else
+								{ 	ss2[4] = GcBytes2[1];
+									ss2[5] = GcBytes2[0];
+								}
+								//K40
+								str=Integer.toString(caliChInfo1[1]);
+								GcBytes2 = new java.math.BigInteger(str, 10).toByteArray();
+								if(GcBytes2.length==1)
+								{	ss2[6] = GcBytes2[0];
+									ss2[7] = 0;
+								}else
+								{ 	ss2[6] =GcBytes2[1];
+									ss2[7] = GcBytes2[0];
+								}
+								//GC
+								sendGcValue=40000;
+								str=Integer.toString(sendGcValue);
+								GcBytes2 = new java.math.BigInteger(str, 10).toByteArray();
+
+								/////////////////
+								if (GcBytes2.length == 1) {
+									ss2[8] = GcBytes2[2];
+									ss2[9] = 0;
+								} else if (GcBytes2.length == 3) {
+									ss2[8] = GcBytes2[2];
+									ss2[9] = GcBytes2[1];
+								} else if (GcBytes2.length == 2) {
+									ss2[8] = GcBytes2[1];
+									ss2[9] = GcBytes2[0];
+								}
+								else
+								{
+
+
+
+
+								if(sendGcValue <=40050)
+								{
+									try {
+
+										if (mMainUsbService != null) {
+											mMainUsbService.write(ss2);
+											//String str2=("send, "+ ", gc,"+ sendGcValue+"\n");
+											//sendGcValue = sendGcValue +50;
+											//IsSpcSaved = false;
+											//NcLibrary.SaveText_HNM(str2);
+
+											mSendGSTask = new TimerTask() {
+
+												@Override
+												public void run()
+												{
+
+													if (mTimeTaskcount > 3)
+													{
+														if (mSendGSTask != null)
+														{
+															mSendGSTask.cancel();
+														}
+													}
+													mMainUsbService.write(MainActivity.MESSAGE_GS_HW);
+													mTimeTaskcount++;
+
+												}
+											};
+											mSendGSTimer = new Timer();
+											mSendGSTimer.schedule(mSendGSTask, 0, 1000);
+
+
+										}
+
+										if (mService != null) {
+											mService.write(ss2);
+										}
+									} catch (Exception e) {
+										NcLibrary.Write_ExceptionLog(e);
+									}
+								}
+					/*		else
+							{
+								String str2=("gc 30000 reset, \n");
+								sendGcValue = 30000;
+							}*/
+
+							}
+						}
+						byte[] ss1 = new byte[5];
+
+							////////////////////////////////
+							// HH200
+						sendGcValue = 33000;
+							NewGC = Integer.toString(sendGcValue);
+							byte[] GcBytes = new java.math.BigInteger(NewGC, 10).toByteArray();
+
+							ss1[0] = 'G';
+							ss1[1] = 'C';
+							if (GcBytes.length == 1) {
+								ss1[2] = 0;
+								ss1[3] = GcBytes[2];
+							} else if (GcBytes.length == 3) {
+								ss1[2] = GcBytes[1];
+								ss1[3] = GcBytes[2];
+							} else if (GcBytes.length == 2) {
+								ss1[2] = GcBytes[0];
+								ss1[3] = GcBytes[1];
+							}
+							ss1[4] = (byte) Byte.valueOf((byte) 1);
+
+
+						if(sendGcValue <=40050)
+						{
+							try {
+
+								if (mMainUsbService != null) {
+									mMainUsbService.write(ss1);
+									//sendGcValue = sendGcValue +50;
+									//IsSpcSaved = false;
+									//String str2=("send, "+ ", gc,"+ sendGcValue+"\n");
+									//NcLibrary.SaveText_HNM(str2);
+									mTimeTaskcount = 0;
+
+									mSendGSTask = new TimerTask() {
+
+										@Override
+										public void run()
+										{
+
+											if (mTimeTaskcount > 3)
+											{
+												if (mSendGSTask != null)
+												{
+													mSendGSTask.cancel();
+												}
+											}
+											mMainUsbService.write(MainActivity.MESSAGE_GS_HW);
+											mTimeTaskcount++;
+
+										}
+									};
+									mSendGSTimer = new Timer();
+									mSendGSTimer.schedule(mSendGSTask, 0, 1000);
+
+
+								}
+
+
+							} catch (Exception e) {
+								NcLibrary.Write_ExceptionLog(e);
+							}
+
+						}
+						}
+						break;
 
 				}
 
@@ -1226,9 +1417,11 @@ public class MainActivity extends TabActivity
 	public void requestPermission()
 	{
 
+
+
 		if(!mDebug.IsDebugMode)
 		{
-			String AppName = "Launcher_1_1_6"; //180723 1.1.6로 런처업데이트
+			String AppName = "Launcher_1_2_1"; //180723 1.1.6로 런처업데이트
 			if (!NcLibrary.CheckedHH200Launcher(mContext, AppName))
 			{
 				Intent Intent = new Intent(MainActivity.this, Guide.class);
@@ -1256,6 +1449,9 @@ public class MainActivity extends TabActivity
 
 		}
 
+
+
+
 		File mIsEnablesdcard = new File("/sdcard");
 		if (!mIsEnablesdcard.exists())
 		{
@@ -1270,6 +1466,8 @@ public class MainActivity extends TabActivity
 
 		audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		audio.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+		mAlarmSound = MediaPlayer.create(this, R.raw.beep1);
+
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
@@ -1369,7 +1567,7 @@ public class MainActivity extends TabActivity
 			mPrefDB.Set_sender_Port("587");
 			mPrefDB.Set_sender_pw("dksdlstjs233");
 			mPrefDB.Set_sender_email("inseon.ahn@nucaremed.com");
-			mPrefDB.Set_recv_address("kinsrpm@kins.re.kr");
+			mPrefDB.Set_recv_address("nucare@nucaremed.com");
 
 			mPrefDB.Set_EmailFirst("N");
 		}
@@ -1791,7 +1989,6 @@ public class MainActivity extends TabActivity
                     NcLibrary.SaveTextCali1(str,MainActivity.FilenameCurCaliInfo);
 
 
-
 					mEventDBOper = new EventDBOper();
 					mEventDBOper.Set_Crytal_Info(Integer.toString(mGCData.DetType));
 					Write_HW_Calibration_Result(mGCData);
@@ -1898,6 +2095,10 @@ public class MainActivity extends TabActivity
 					mDetector.mHW_Cs137_FxiedCh2 = mGCData.Cs137_Ch2;
 					mDetector.mCrtstalType =  mGCData.DetType;
 					int[] HWinfo= {mDetector.mHW_Cs137_FxiedCh1,mDetector.mHW_Cs137_FxiedCh2,mDetector.mHW_K40_FxiedCh ,mDetector.mHW_GC,mGCData.DetType};
+
+					//String str2=("receive, "+ ", gc,"+  mGCData.GC+"\n");
+					//NcLibrary.SaveText_HNM(str2);
+
 					//NcLibrary.SaveTextCali(HWinfo,MainActivity.FilenameCurCaliInfo, 5);
 					
 					/*..........................
@@ -1915,7 +2116,10 @@ public class MainActivity extends TabActivity
 
 					String str = "ch : "+PeakCh[0]+", "+PeakCh[1]+ ", "+PeakCh[2]+" a :"+FitParam[0]+" b : "+FitParam[1]+" c : "+FitParam[2]+" GC : "+mDetector.mHW_GC+ " DetType : "+mGCData.DetType;
 					//NcLibrary.SaveText1(MainActivity.FilenameCurCaliInfo, str);
+
 					NcLibrary.SaveTextCali1(str,MainActivity.FilenameCurCaliInfo);
+
+
 
 
 					mEventDBOper = new EventDBOper();
@@ -1997,6 +2201,8 @@ public class MainActivity extends TabActivity
 					mDetector.Discrimination();
 					int[] aaa = (int[]) msg.obj;
 
+
+
 					// String a = Integer.toString(aaa.length);
 
 					if (mNormalDB != null)
@@ -2009,6 +2215,156 @@ public class MainActivity extends TabActivity
 					NcLibrary.Write_ExceptionLog(e);
 				}
 				break;
+
+				//j3 및 시간데이터 처리
+				case MainActivity.MESSAGE_READ_DETECTOR_DATA_J3:
+
+					try
+					{
+						ReadDetectorData mReadData = new ReadDetectorData();
+						mReadData = (ReadDetectorData) msg.obj;
+						mDetector.GM_Cnt = mReadData.GM;
+						mDetector.hv = mReadData.mHighVoltage;
+
+
+
+						if (mReadData.IsThereNeutron == false)
+						{
+							Intent send_gs = new Intent(MainBroadcastReceiver.MSG_NOT_RECV_USB_NEUTRON);
+							LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(send_gs);
+						}
+						else
+						{
+							mDetector.mIsNeutronModel = true;
+							//MainActivity.mDetector.mNeutron.Set_CPS((mReadData.GetAVGNeutron <= 0.08) ? 0 : mReadData.GetAVGNeutron);
+							//테스트 MainActivity.mDetector.mNeutron.Set_CPS(mReadData.GetAVGNeutron);
+							//181129 0.08이하 0으로 표시 삭제
+							MainActivity.mDetector.mNeutron.Set_CPS(mReadData.GetAVGNeutron);
+							mHandler.obtainMessage(MainActivity.MESSAGE_NEUTRON_RECV, 0, 0, mReadData.GetAVGNeutron).sendToTarget();
+
+						}
+						if ((ReadDetectorData) msg.obj != null) {
+							mDetector.Set_Spectrum(mReadData.pdata, mReadData.mRealTime);
+							mDetector.Discrimination();
+						}
+
+						if (mNormalDB != null)
+						{
+							mNormalDB.addValue(mDetector.User, mDetector.Location, mDetector.Get_Gamma_DoseRate_nSV(),mDetector.mNeutron.Get_CPS());
+						}
+
+                        if (mDetector.Get_GammaCPS() == 0) {
+
+
+                            // 0104 SendU4AA();
+
+                            SendU2AA();
+                            Timer mTimer = new Timer();
+                            TimerTask mTask = new TimerTask() {
+                                @Override
+                                public void run() {
+                                    SendU2AA();
+                                }
+                            };
+                            mTimer.schedule(mTask, 5000);
+                            //190111  타이머 주석처리
+	/*						Timer mTimer = new Timer();
+
+							TimerTask mTask2 = new TimerTask() {
+								@Override
+								public void run() {
+									if (mDetector.Get_GammaCPS() == 0) {
+
+										NcLibrary.Show_Dlg(getString(R.string.CPS_ZeroMsg), mContext);
+									}
+
+								}
+							};
+
+							Timer mTimer2 = new Timer();
+							mTimer2.schedule(mTask2, 5000);*/
+
+	/*						if (mDetector.Get_GammaCPS() == 0) {
+								((Activity) mContext).runOnUiThread(new Runnable() {
+									public void run() {
+										NcLibrary.Show_Dlg(getString(R.string.CPS_ZeroMsg), mContext);
+									}
+								});
+							}*/
+
+                        }
+
+			/*			if ((ReadDetectorData) msg.obj != null)
+						{
+							mDetector.Set_Spectrum(mReadData.pdata);
+							//mDetector.Set_Spectrum(mReadData.pdata, mReadData.mRealTime);
+							//NcLibrary.SaveText1("RealTime "+mReadData.time +"(time:"+mReadData.mRealTime+") cps : "+mDetector.MS.Get_AvgCPS1()+"("+mDetector.MS.Get_AvgCPS()+") cnt : "+mDetector.MS.Get_TotalCount()+"\n","test");
+
+							mTimeSpcCollect1+=1;
+							mDetector.MS.sumSpectrum(mDetector.MS.get_Channel());
+
+							if(mTimeSpcCollect1==30)
+							{
+								mTimeSpcCollect1 = 0;
+								mTimeSpcCollect+=1;
+
+								String str2=("30sec, "+"read, "+ mDetector.MS.getSumSpectrum());
+								NcLibrary.SaveText_HNM(str2);
+								mDetector.MS.clearSpectrum();
+								//saveSpc = "";
+
+								if(mTimeSpcCollect==5)
+								{
+									// 파일안에 문자열 쓰기
+									mTimeSpcCollect = 0;
+									mDetector.MS.clearSpectrum();
+									Intent intent = new Intent(MainBroadcastReceiver.MSG_FIXED_GC_SEND1);
+									LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+								}
+							}
+						}*/
+
+					//	if ((ReadDetectorData) msg.obj != null) {
+					//		mDetector.Set_Spectrum(mReadData.pdata);
+							//mDetector.Set_Spectrum(mReadData.pdata, mReadData.mRealTime);
+							//NcLibrary.SaveText1("RealTime "+mReadData.time +"(time:"+mReadData.mRealTime+") cps : "+mDetector.MS.Get_AvgCPS1()+"("+mDetector.MS.Get_AvgCPS()+") cnt : "+mDetector.MS.Get_TotalCount()+"\n","test");
+
+							//
+							// HungNM: Starting getting Spectrum
+		/*					mTimeSpcCollect1 += 1;
+							mDetector.MS.sumSpectrum(mDetector.MS.get_Channel());
+
+							if (mTimeSpcCollect1 == 30) {
+								mDetector.MS.clearSpectrum();
+								//saveSpc = "";
+							} else {
+								mTimeSpcCollect1 = 0;
+								mTimeSpcCollect += 1;
+
+								if (mTimeSpcCollect == 5) {
+									// 파일안에 문자열 쓰기
+									mTimeSpcCollect = 0;
+									mDetector.MS.clearSpectrum();
+									Intent intent = new Intent(MainBroadcastReceiver.MSG_FIXED_GC_SEND1);
+									LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+								}
+							}*/
+					//	}
+
+
+
+
+						if (mNormalDB != null)
+							mNormalDB.addValue(mDetector.User, mDetector.Location, mDetector.Get_Gamma_DoseRate_nSV(),
+									mDetector.mNeutron.Get_CPS());
+
+
+
+					} catch (Exception e) {
+						NcLibrary.Write_ExceptionLog(e);
+						;
+					}
+					break;
 
 			case MESSAGE_NEUTRON_RECV:
 
@@ -3000,7 +3356,6 @@ public class MainActivity extends TabActivity
 				} else {
 					Library.setText(temp22);
 					LibraryStr = temp22;
-
 				}
 			}
 			if (mDetector.IsSigmaThreshold) {
@@ -3038,69 +3393,65 @@ public class MainActivity extends TabActivity
 
 	}
 
-	void Start_Alarm(boolean IsBeep) {
+    void Start_Alarm(boolean IsBeep)
+    {
 
-		try {
+        try {
 
-			if (IsBeep)
-				return;
-			AudioManager ssq = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+            if (IsBeep)
+                return;
+            AudioManager ssq = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 
-			if (ssq.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
-				Start_Vibrate();
-			}
-			else
-			{
-				ssq.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-			}
+            if (ssq.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+                Start_Vibrate();
+            }
 
-			if (mDetector.Is_HealthEvent())
-				return;
+            if (mDetector.Is_HealthEvent())
+                return;
 
-			if (mDetector.AlarmSound == R.raw.beep1)
-			{
-				if (mAlarmSound == null)
-					mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
+            if (mDetector.AlarmSound == R.raw.beep1) {
+                if (mAlarmSound == null)
+                    mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
 
-				if (mAlarmSound.isPlaying() == false) {
-					if (mDetector.MS.Get_TotalCount() > mDetector.Get_GammaThreshold() * 3.5) {
-						mAlarmSound = MediaPlayer.create(this, R.raw.beep3);
-						mAlarmSound.setVolume(100, 100);
-						mAlarmSound.start();
-					} else if (mDetector.MS.Get_TotalCount() > mDetector.Get_GammaThreshold() * 1.5) {
-						mAlarmSound = MediaPlayer.create(this, R.raw.beep2);
-						mAlarmSound.setVolume(100, 100);
-						mAlarmSound.start();
-					} else {
-						mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
-						mAlarmSound.setVolume(100, 100);
-						mAlarmSound.start();
+                if (mAlarmSound.isPlaying() == false) {
+                    if (mDetector.MS.Get_TotalCount() > mDetector.Get_GammaThreshold() * 3.5) {
+                        mAlarmSound = MediaPlayer.create(this, R.raw.beep3);
+                        mAlarmSound.setVolume(100, 100);
+                        mAlarmSound.start();
+                    } else if (mDetector.MS.Get_TotalCount() > mDetector.Get_GammaThreshold() * 1.5) {
+                        mAlarmSound = MediaPlayer.create(this, R.raw.beep2);
+                        mAlarmSound.setVolume(100, 100);
+                        mAlarmSound.start();
+                    } else {
+                        mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
+                        mAlarmSound.setVolume(100, 100);
+                        mAlarmSound.start();
 
-					}
-				}
-				return;
-			}
+                    }
+                }
+                return;
+            }
 
-			if (mAlarmSound != null) {
-				if (mAlarmSound.isPlaying()) {
-					mAlarmSound.stop();
-					mAlarmSound.reset();
-				}
-			}
-			mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
+            if (mAlarmSound != null) {
+                if (mAlarmSound.isPlaying()) {
+                    mAlarmSound.stop();
+                    mAlarmSound.reset();
+                }
+            }
+            mAlarmSound = MediaPlayer.create(this, mDetector.AlarmSound);
 
-			if (mAlarmSound != null) {
-				// if(mAlarmSound.isPlaying() == false){
-				mAlarmSound.setVolume(80, 80);
-				mAlarmSound.start();
-				mAlarmSound.setLooping(true);
-				// }
-			}
+            if (mAlarmSound != null) {
+                // if(mAlarmSound.isPlaying() == false){
+                mAlarmSound.setVolume(80, 80);
+                mAlarmSound.start();
+                mAlarmSound.setLooping(true);
+                // }
+            }
 
-		} catch (Exception e) {
-			NcLibrary.Write_ExceptionLog(e);
-		}
-	}
+        } catch (Exception e) {
+            NcLibrary.Write_ExceptionLog(e);
+        }
+    }
 
 	void Stop_Alarm() {
 
@@ -3555,7 +3906,7 @@ public class MainActivity extends TabActivity
 		}else if(mChangeK40ratio <=0.02)
 		{	mDetector.mGain_restTime=mGain_restTime_under2;
 			status = 1;	// rest time for GS 60sec
-			return status;
+			//return status;
 		}else
 		{	mDetector.mGain_restTime=mGain_restTime_over2;
 			status=2;	// rest time for GS 10sec
@@ -3570,7 +3921,11 @@ public class MainActivity extends TabActivity
 
 		mDetector.mHW_GC = (int) ((double) mDetector.mHW_GC + mChangeK40);
 
+		//
+
 		byte[] GcBytes = new java.math.BigInteger(NewGC, 10).toByteArray();
+
+		//
 
 		byte[] ss = new byte[5];
 		ss[0] = 'G';
@@ -3601,6 +3956,12 @@ public class MainActivity extends TabActivity
 		} catch (Exception e) {
 			NcLibrary.Write_ExceptionLog(e);
 		}
+
+		//spectrum collect
+		//30 sec/5 time
+
+
+		//text file save
 
 		return status;
 	}
@@ -3922,6 +4283,9 @@ public void Start_locationUpdates() {
         params.screenBrightness = 1f;
         // 밝기 설정 적용
         getWindow().setAttributes(params);*/
+
+		mDetector.MS.clearSpectrum();
+		mDetector.Init_Measure_Data();
 
 	}
 
@@ -4360,6 +4724,18 @@ public void Start_locationUpdates() {
 				}
 				break;
 			case HW_Key.Back:
+				if(openMenu)
+				{
+					new Thread(new Runnable() {
+
+						public void run() {
+
+							new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+						}
+					}).start();
+					//menuTemp = false;
+				}
+
 				if (ACTIVITY_STATE == Activity_Mode.FIRST_ACTIVITY) {
 					/*
 					 * new Thread(new Runnable() {
@@ -4369,7 +4745,9 @@ public void Start_locationUpdates() {
 					 * new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU ); }
 					 * }).start();
 					 */
-				} else {
+				}
+				else
+				{
 					new Thread(new Runnable() {
 
 						public void run() {
@@ -4413,7 +4791,6 @@ public void Start_locationUpdates() {
 			case HW_Key.Enter:
 				count++;
 				Log.d("time:", "DoubleTest : ShotpressEnter 작동");
-
 				new Thread(new Runnable() {
 
 					public void run() {
@@ -4965,6 +5342,7 @@ public void Start_locationUpdates() {
 		filter.addAction(MainBroadcastReceiver.MSG_POWER_DISCONNECT);
 		filter.addAction(MainBroadcastReceiver.MSG_USB_DISCONNECT);
 		filter.addAction(MainBroadcastReceiver.MSG_FIXED_GC_SEND);
+		filter.addAction(MainBroadcastReceiver.MSG_FIXED_GC_SEND1);
 		LocalBroadcastManager.getInstance(mContext).registerReceiver(mMainBCR, filter);
 	}
 
@@ -5017,24 +5395,24 @@ public void Start_locationUpdates() {
 
 	}
 
-	public void VolumeUp() {
+    public void VolumeUp() {
 
-		audio.setStreamVolume(AudioManager.STREAM_RING, (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0),
-				AudioManager.FLAG_PLAY_SOUND);
+        audio.setStreamVolume(AudioManager.STREAM_RING, (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0),
+                AudioManager.FLAG_PLAY_SOUND);
 
-		audio.setStreamVolume(AudioManager.STREAM_SYSTEM,
-				(int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0), AudioManager.FLAG_PLAY_SOUND);
+        audio.setStreamVolume(AudioManager.STREAM_SYSTEM,
+                (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0), AudioManager.FLAG_PLAY_SOUND);
 
-		audio.setStreamVolume(AudioManager.STREAM_ALARM, (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0),
-				AudioManager.FLAG_PLAY_SOUND);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC,
+                (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0.65), AudioManager.FLAG_PLAY_SOUND);
 
-		audio.setStreamVolume(AudioManager.STREAM_NOTIFICATION,
-				(int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0), AudioManager.FLAG_PLAY_SOUND);
+        audio.setStreamVolume(AudioManager.STREAM_ALARM, (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0),
+                AudioManager.FLAG_PLAY_SOUND);
 
-		audio.setStreamVolume(AudioManager.STREAM_MUSIC,
-				(int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0.65), AudioManager.FLAG_PLAY_SOUND);
+        audio.setStreamVolume(AudioManager.STREAM_NOTIFICATION,
+                (int) (audio.getStreamMaxVolume(AudioManager.STREAM_RING) * 0), AudioManager.FLAG_PLAY_SOUND);
 
-	}
+    }
 
 	public void BluetoothListExcute() {
 		try {
@@ -5147,7 +5525,7 @@ public void Start_locationUpdates() {
 				mPrefDB.Set_sender_Port("587");
 				mPrefDB.Set_sender_pw("dksdlstjs233");
 				mPrefDB.Set_sender_email("inseon.ahn@nucaremed.com");
-				mPrefDB.Set_recv_address("kinsrpm@kins.re.kr");
+				mPrefDB.Set_recv_address("nucare@nucaremed.com");
 
 			}
 

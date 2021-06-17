@@ -95,7 +95,7 @@
     <PreferenceCategory android:title="@string/administrator_settings" >
     </PreferenceCategory>
 
-    <EditTextPreference
+    <PreferenceScreen
         android:defaultValue=""
         android:digits="0123456789"
         android:inputType="number|numberSigned|numberDecimal"
@@ -284,12 +284,15 @@
             </EditTextPreference>
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/admin_pw" >
-            <EditTextPreference
+
+            <PreferenceScreen
                 android:defaultValue="1234"
                 android:key="@string/Admin_Password"
                 android:inputType="textPassword"
         		android:persistent="true"
-                android:title="@string/password" />
+                android:title="@string/password" >
+            </PreferenceScreen>
+
             <PreferenceScreen
                 android:key="@string/reset_Calibartion_key"
                 android:summary="@string/reset_Calibartion_title_summary"

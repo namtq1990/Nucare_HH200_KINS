@@ -806,7 +806,7 @@ public class SpectrumView extends View {
 		int text_height = (measureTextHeight("0", paint) + 20);
 		
 		// mFoundIsotopes.get(i).getIsoClass()
-		
+
 		for (int i = 0; i < mFoundIsotopes.size(); i++)
 		{
 
@@ -822,8 +822,13 @@ public class SpectrumView extends View {
 				//paint.setColor(Color.rgb(255, 0, 0));
 			}
 
-
+			//190917
+			//canvas.drawText(IDspectrumActivity.foundPeak, (dataRect.right-10),(float)(dataRect.bottom*0.2), paint);
+			//canvas.drawText( mFoundIsotopes.get(i).isotopes + mFoundIsotopes.get(i).getIsoClass()+"  "+mFoundIsotopes.get(i).Get_ConfidenceLevel(), (dataRect.right-10),(float)(dataRect.bottom*0.2+((i+1)*text_height)), paint);
+			//canvas.drawText( mFoundIsotopes.get(i).isotopes + mFoundIsotopes.get(i).getIsoClass()+"  "+mFoundIsotopes.get(i).Get_ConfidenceLevel()+"  "+Math.round(mFoundIsotopes.get(i).Uncer), (dataRect.right-10),(float)(dataRect.bottom*0.2+((i+1)*text_height)), paint);
 			canvas.drawText(mFoundIsotopes.get(i).isotopes + mFoundIsotopes.get(i).getIsoClass()+"  "+mFoundIsotopes.get(i).Get_ConfidenceLevel(), (dataRect.right-10),(float)(dataRect.bottom*0.2+(i*text_height)), paint);
+
+
 		}
 	}
 

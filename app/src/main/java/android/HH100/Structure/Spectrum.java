@@ -1,6 +1,7 @@
 package android.HH100.Structure;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
@@ -14,6 +15,7 @@ public class Spectrum implements Serializable {
 	private static final long serialVersionUID = -6726229612941490740L;
 
 	private double[] mSPC = new double[1024];
+	private double[] sumSpc = new double[1024];
 	private int mAcqTime;
 	private String mDate = "";
 	private Coefficients mCoefficients = new Coefficients();
@@ -38,6 +40,23 @@ public class Spectrum implements Serializable {
 		mAcqTime = 1;
 	}
 
+    public void sumSpectrum(double[] channel) {
+
+        for (int i = 0; i < channel.length; i++) {
+            sumSpc[i] = sumSpc[i]+channel[i];
+        }
+
+    }
+	public void clearSpectrum()
+	{
+		sumSpc = new double[1024];
+	}
+
+    public String getSumSpectrum() {
+		String ret = Arrays.toString(sumSpc)+"\n";
+		return ret;
+    }
+
 	public Spectrum(double[] channel) {
 		mSPC = channel;
 		mAcqTime = 1;
@@ -57,6 +76,7 @@ public class Spectrum implements Serializable {
 	 * }
 	 */
 
+	//double[] FWHM = new double[] { 1.2707811254, -1.5464537062 };
 	double[] FWHM;
 
 	public double[] getFWHM() {
@@ -180,6 +200,7 @@ public class Spectrum implements Serializable {
 		return true;
 	}
 
+
 	public boolean Set_Spectrum(int[] spc, int acqTime) {
 
 		mSPC = new double[spc.length];
@@ -298,10 +319,14 @@ public class Spectrum implements Serializable {
 	}
 
 	public double Get_AvgCPS() {
+
 		int Result = 0;
 		for (int i = 0; i < mSPC.length; i++) {
 			Result += mSPC[i];
 		}
+		if(mAcqTime==0)
+			mAcqTime = 1;
+
 		if (Result == 0)
 			return 0;
 		return Result / mAcqTime;
@@ -345,6 +370,12 @@ public class Spectrum implements Serializable {
 			Result[i] = mSPC[i];
 		}
 		return Result;
+	}
+
+
+	public String arrayString() {
+		String ret = Arrays.toString(mSPC)+"\n";
+		return ret;
 	}
 
 	public void Set_StartSystemTime() {

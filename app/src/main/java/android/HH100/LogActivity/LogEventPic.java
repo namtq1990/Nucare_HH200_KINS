@@ -99,6 +99,8 @@ public class LogEventPic extends Fragment
         View view = inflater.inflate(R.layout.event_log_photo1, null);
         LogTabActivity.mPagerEvent.setPageScrollEnabled(false);
 
+        MainActivity.ActionViewExcuteCheck = MainActivity.Activity_Mode.UN_EXCUTE_MODE;
+
         listGallery = (CHorizListView)view.findViewById(R.id.IDLIST_CHAT_GALLERY);
         mMediaCnt = (TextView) view.findViewById(R.id.EventLog_PhotoCount);
         ArrayList<String> arrGalleryData = new ArrayList<>();
@@ -266,10 +268,23 @@ public class LogEventPic extends Fragment
                                     }
                                 }
 
-                                f2d = new File(FolderPath+EventData.PhotoFileName1.get(index)+".png");
-                                f2d.delete();
+                                for(int k =0; k<EventData.PhotoFileName1.size(); k++)
+                                {
+                                    if(EventData.PhotoFileName1.get(k).equals(name))
+                                    {
+                                        f2d = new  File(FolderPath+name+".png");
+                                        if(f2d.exists())
+                                        {
+                                            f2d.delete();
+                                        }
+                                        EventData.PhotoFileName1.remove(k);
+                                    }
+                                }
 
-                                EventData.PhotoFileName1.remove(index);
+                             /*   f2d = new File(FolderPath+EventData.PhotoFileName1.get(index)+".png");
+                                f2d.delete();*/
+
+                              //  EventData.PhotoFileName1.remove(index);
                                 DB.updateGallery(1,  EventData.Event_Number, updateFile);
 
                                 break;
@@ -279,12 +294,19 @@ public class LogEventPic extends Fragment
                                     if(mArrFileUrl.get(i).fileName.contains("EventV") && !mArrFileUrl.get(i).fileName.equals(name))
                                         updateFile += mArrFileUrl.get(i).fileName+";";
                                 }
-                                f2d = new File(FolderPath+EventData.VedioFileName1.get(index)+".mp4");
-                                f2d.delete();
-
-
+                                for(int k =0; k<EventData.VedioFileName1.size(); k++)
+                                {
+                                    if(EventData.VedioFileName1.get(k).equals(name))
+                                    {
+                                        f2d = new File(FolderPath+name+".mp4");
+                                        if(f2d.exists())
+                                        {
+                                            f2d.delete();
+                                        }
+                                        EventData.VedioFileName1.remove(k);
+                                    }
+                                }
                                 DB.updateGallery(2,  EventData.Event_Number, updateFile);
-                                EventData.VedioFileName1.remove(index);
                                 break;
                             case 3 :
                                 for(int i = 0; i<mArrFileUrl.size(); i++)
@@ -292,11 +314,25 @@ public class LogEventPic extends Fragment
                                     if(mArrFileUrl.get(i).fileName.contains("EventR") && !mArrFileUrl.get(i).fileName.equals(name))
                                         updateFile += mArrFileUrl.get(i).fileName+";";
                                 }
-                                f2d = new File(FolderPath+EventData.RecodeFileName1.get(index)+".amr");
-                                f2d.delete();
+
+                                for(int k =0; k<EventData.RecodeFileName1.size(); k++)
+                                {
+                                    if(EventData.RecodeFileName1.get(k).equals(name))
+                                    {
+                                        f2d = new  File(FolderPath+name+".amr");
+                                        if(f2d.exists())
+                                        {
+                                            f2d.delete();
+                                        }
+                                        EventData.RecodeFileName1.remove(k);
+                                    }
+                                }
+
+                    /*            f2d = new File(FolderPath+EventData.RecodeFileName1.get(index)+".amr");
+                                f2d.delete();*/
 
                                 DB.updateGallery(3,  EventData.Event_Number, updateFile);
-                                EventData.RecodeFileName1.remove(index);
+                               // EventData.RecodeFileName1.remove(index);
                                 break;
                         }
 
@@ -439,7 +475,7 @@ public class LogEventPic extends Fragment
                         {
                             updateFile += EventData.PhotoFileName1.get(i)+";";
                         }
-                        updateFile += fileName+";";
+                        updateFile += fileName;
                         EventData.PhotoFileName1.add(fileName);
                         setGallery();
                     }
@@ -451,7 +487,7 @@ public class LogEventPic extends Fragment
                         for (int i = 0; i < EventData.VedioFileName1.size(); i++) {
                             updateFile += EventData.VedioFileName1 + ";";
                         }
-                        updateFile += fileName + ";";
+                        updateFile += fileName ;
                         EventData.VedioFileName1.add(fileName);
                         setGallery();
                         // DB.updateGallery(2,  EventData.Event_Number, updateFile);
@@ -472,10 +508,14 @@ public class LogEventPic extends Fragment
                     {
                         for(int i = 0; i < EventData.RecodeFileName1.size(); i++)
                         {
-                            updateFile += recodeFileList.get(i)+";";
+                            File f2d = new  File(FolderPath+ EventData.RecodeFileName1.get(i)+".amr");
+                            if(f2d.exists())
+                            {
+                                updateFile += EventData.RecodeFileName1.get(i)+";";
+                            }
                         }
-                      updateFile += fileName+";";
-                      EventData.RecodeFileName1.add(fileName);
+                     // updateFile += fileName;
+
                       setGallery();
                     // DB.updateGallery(3,  EventData.Event_Number, updateFile);
                     }

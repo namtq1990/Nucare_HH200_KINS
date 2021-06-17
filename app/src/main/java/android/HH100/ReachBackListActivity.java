@@ -16,8 +16,11 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -62,7 +65,7 @@ public class ReachBackListActivity extends Activity  implements AbsListView.OnSc
 	boolean lastItemVisibleFlag  = false; // 리스트 스크롤이 마지막 셀(맨 바닥)로 이동했는지 체크할 변수
 	boolean mLockListView = false; // 데이터 불러올때 중복안되게 하기위한 변수
 	final int OFFSET = 50;                  // 한 페이지마다 로드할 데이터 갯수.
-
+	boolean clickChk = false;
 	@Override
 	protected void onResume()
 	{
@@ -260,6 +263,60 @@ public class ReachBackListActivity extends Activity  implements AbsListView.OnSc
 
 	}
 
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		int[] coordinates = new int[2];
+		long downTime = 0;
+		long eventTime = 0;
+		MotionEvent down_event, up_event;
+		try
+		{
+			getCurrentFocus().getLocationOnScreen(coordinates);
+		}
+		catch (NullPointerException e)
+		{
+			return super.dispatchKeyEvent(event);
+		}
+		if (coordinates[1] < 10) //상단 리치백로그 인지 판단
+		{
+			return super.dispatchKeyEvent(event);
+		}
+		else
+		{
+			if(!clickChk) {
+				clickChk = true;
+				switch (event.getKeyCode()) {
+					case KeyEvent.KEYCODE_ENTER:
+						eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+						downTime = SystemClock.uptimeMillis();
+						eventTime = SystemClock.uptimeMillis();
+						down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0], coordinates[1], 0);
+						up_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, coordinates[0], coordinates[1], 0);
+						eventList.dispatchTouchEvent(down_event);
+						eventList.dispatchTouchEvent(up_event);
+
+						return false;
+
+					case KeyEvent.KEYCODE_POWER: //longclick 일때
+
+						eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+						downTime = SystemClock.uptimeMillis();
+						eventTime = SystemClock.uptimeMillis() + 1000;
+						down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0], coordinates[1], 0);
+						eventList.dispatchTouchEvent(down_event);
+
+						return false;
+				}
+			}
+			else
+			{
+				clickChk = false;
+			}
+		}
+		return super.dispatchKeyEvent(event);
+	}
 	// reachback failed  checkbox click Listener
 	private CompoundButton.OnCheckedChangeListener chkClick = new CompoundButton.OnCheckedChangeListener()
 	{

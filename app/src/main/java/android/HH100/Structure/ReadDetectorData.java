@@ -21,4 +21,13 @@ public class ReadDetectorData
 	public String board = "";
 	public String serial = "";
 
+	//190123 추후 galaxy j3
+	public int mRealTime= -1;
+	public double time= -1;
+	//시간정보 있는지 없는지 체크
+	public boolean isRealTime = false;
+
+	//190425 test hv
+	public double mHighVoltage =0;
+
 }

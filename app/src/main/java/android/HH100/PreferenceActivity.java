@@ -35,10 +35,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PreferenceActivity extends android.preference.PreferenceActivity implements OnPreferenceChangeListener {
@@ -113,16 +120,149 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
 		// Adminrock();
 		mAdmin = (PreferenceScreen) findPreference(getString(R.string.p_admin));
+		final PreferenceScreen menuEnableKey = (PreferenceScreen) findPreference(getString(R.string.menu_enable_key));
+		menuEnableKey.setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
 
-		final EditTextPreference menuEnableKey = (EditTextPreference) findPreference(
-				getString(R.string.menu_enable_key));
+				LinearLayout layout = new LinearLayout(PreferenceActivity.this);
+				layout.setOrientation(LinearLayout.VERTICAL);
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+/*				//비밀번호를 입력해주세요
+				TextView msg1= new TextView(PreferenceActivity.this);
+				msg1.setGravity(Gravity.CENTER);
+				msg1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
+				msg1.setText(getString(R.string.password));
+				msg1.setPadding(0,20,0,0);
+				layout.addView(msg1);*/
+
+				//password
+				final EditText password = new EditText(PreferenceActivity.this);
+				password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+				//password.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+				//password.setPrivateImeOptions("defaultInputmode=numeric;"); //영어로 기본 자판 설정
+				password.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				password.setTransformationMethod(new PasswordTransformationMethod());
+				password.setGravity(Gravity.CENTER_HORIZONTAL);
+				lp.setMargins(20, 20, 20, 30);
+				password.setLayoutParams(lp);
+				layout.addView(password);
+
+				AlertDialog.Builder security = new AlertDialog.Builder(new ContextThemeWrapper(PreferenceActivity.this, android.R.style.Theme_Holo_Dialog));
+				security.setCancelable(true);
+				security.setTitle(getString(R.string.admin));
+				security.setView(layout);
+				security.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+
+						try {
+							PreferenceDB mPrefDB = new PreferenceDB(PreferenceActivity.this);
+							mPrefDB.Get_AdminPW_From_pref();
+							if (password.getText().toString().equals(mPrefDB.Get_AdminPW_From_pref())|| password.getText().toString().equals(getResources().getString(R.string.master_PW)))
+							{
+								//menuEnableKey.setText("");
+								mAdmin.setEnabled(true);
+								mAdmin.setEnabled(true);
+								menuEnableKey.setEnabled(false);
+
+							}
+							else
+							{
+								//menuEnableKey.setText("");
+								mAdmin.setEnabled(false);
+								mAdmin.setEnabled(false);
+							}
+						} catch (Exception e) {
+							NcLibrary.Write_ExceptionLog(e);
+						}
+					}
+				});
+				security.setNegativeButton(getResources().getString(R.string.cancel), null);
+				AlertDialog dlg =  security.create();
+				dlg.show();
+
+				return false;
+			}
+		});
+
+		final PreferenceScreen setPw = (PreferenceScreen) findPreference(getString(R.string.Admin_Password));
+		setPw.setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
+			@Override
+			public boolean onPreferenceClick(Preference preference)
+			{
+
+				PreferenceDB pre = new PreferenceDB(PreferenceActivity.this);
+				LinearLayout layout = new LinearLayout(PreferenceActivity.this);
+				layout.setOrientation(LinearLayout.VERTICAL);
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+				//password
+				final EditText password = new EditText(PreferenceActivity.this);
+				//password.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+				password.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD );
+				//password.setPrivateImeOptions("defaultInputmode=numeric;"); //영어로 기본 자판 설정
+				password.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+				password.setTransformationMethod(new PasswordTransformationMethod());
+				password.setGravity(Gravity.CENTER_HORIZONTAL);
+				password.setHint(pre.Get_AdminPW_From_pref());
+				lp.setMargins(20, 20, 20, 30);
+				password.setLayoutParams(lp);
+				layout.addView(password);
+
+				AlertDialog.Builder security = new AlertDialog.Builder(new ContextThemeWrapper(PreferenceActivity.this, android.R.style.Theme_Holo_Dialog));
+				security.setCancelable(true);
+				security.setTitle(getString(R.string.admin));
+				security.setView(layout);
+				security.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener()
+				{
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+
+						try {
+
+							pre.Set_String_on_pref(PreferenceActivity.this.getString(R.string.Admin_Password),password.getText().toString() );
+
+/*							if (password.getText().toString().equals(mPrefDB.Get_AdminPW_From_pref())|| password.getText().toString().equals(getResources().getString(R.string.master_PW)))
+							{
+								//menuEnableKey.setText("");
+								mAdmin.setEnabled(true);
+								mAdmin.setEnabled(true);
+								menuEnableKey.setEnabled(false);
+
+							}
+							else
+							{
+								//menuEnableKey.setText("");
+								mAdmin.setEnabled(false);
+								mAdmin.setEnabled(false);
+							}*/
+						} catch (Exception e) {
+							NcLibrary.Write_ExceptionLog(e);
+						}
+					}
+				});
+				security.setNegativeButton(getResources().getString(R.string.cancel), null);
+				AlertDialog dlg =  security.create();
+				dlg.show();
+
+				return false;
+			}
+		});
+
 
 		if (DebugginMode == false) {
 
 			mAdmin.setEnabled(false);
 		}
 
-		menuEnableKey.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+/*		menuEnableKey.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -130,12 +270,11 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 				try {
 
 					PreferenceDB mPrefDB = new PreferenceDB(PreferenceActivity.this);
-
 					mPrefDB.Get_AdminPW_From_pref();
 					if (newValue.toString().equals(mPrefDB.Get_AdminPW_From_pref())
 							|| newValue.toString().equals(getResources().getString(R.string.master_PW))) {
 
-						menuEnableKey.setText("");
+						//menuEnableKey.setText("");
 						mAdmin.setEnabled(true);
 						mAdmin.setEnabled(true);
 						menuEnableKey.setEnabled(false);
@@ -143,7 +282,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 						return false;
 					} else {
 
-						menuEnableKey.setText("");
+						//menuEnableKey.setText("");
 						mAdmin.setEnabled(false);
 						mAdmin.setEnabled(false);
 
@@ -154,7 +293,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 					return false;
 				}
 			}
-		});
+		});*/
 
 		mAdmin.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
@@ -168,7 +307,8 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 		
 		mResetCalibration = (PreferenceScreen) findPreference(getString(R.string.reset_Calibartion_key));
 
-		mResetCalibration.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		mResetCalibration.setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
 
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -655,8 +795,10 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 		ListPreference edit_DoseUnit = (ListPreference) findPreference("p_DoseUnit");
 		edit_DoseUnit.setEnabled(false);
 		//admin password표시 180130
-		EditTextPreference Admin_Pass = (EditTextPreference) findPreference("Admin_Password");
+		PreferenceScreen Admin_Pass = (PreferenceScreen) findPreference("Admin_Password");
 		Admin_Pass.setEnabled(false);
+/*		EditTextPreference Admin_Pass = (EditTextPreference) findPreference("Admin_Password");
+		Admin_Pass.setEnabled(false);*/
 		EditTextPreference NeutronThre = (EditTextPreference) findPreference(
 				getResources().getString(R.string.neutron_threshold));
 		NeutronThre.setEnabled(false);
@@ -677,8 +819,10 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 				getResources().getString(R.string.p_psrc_sequential));
 		seqMode.setEnabled(false);
 
-		EditTextPreference admin_pw = (EditTextPreference) findPreference(
+/*		EditTextPreference admin_pw = (EditTextPreference) findPreference(
 				getResources().getString(R.string.Admin_Password));
+		admin_pw.setEnabled(false);*/
+		PreferenceScreen admin_pw = (PreferenceScreen) findPreference("Admin_Password");
 		admin_pw.setEnabled(false);
 
 		PreferenceScreen SetBackgroundMeasurementMode = (PreferenceScreen) findPreference(
@@ -710,8 +854,10 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
 		ListPreference edit_DoseUnit = (ListPreference) findPreference("p_DoseUnit");
 		edit_DoseUnit.setEnabled(false);
-		EditTextPreference Admin_Pass = (EditTextPreference) findPreference("Admin_Password");
-		Admin_Pass.setEnabled(true);
+/*		EditTextPreference Admin_Pass = (EditTextPreference) findPreference("Admin_Password");
+		Admin_Pass.setEnabled(true);*/
+		PreferenceScreen Admin_Pass = (PreferenceScreen) findPreference("Admin_Password");
+		Admin_Pass.setEnabled(false);
 		EditTextPreference NeutronThre = (EditTextPreference) findPreference(
 				getResources().getString(R.string.neutron_threshold));
 		NeutronThre.setEnabled(true);
@@ -732,9 +878,12 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 				getResources().getString(R.string.p_psrc_sequential));
 		seqMode.setEnabled(true);
 
-		EditTextPreference admin_pw = (EditTextPreference) findPreference(
+/*		EditTextPreference admin_pw = (EditTextPreference) findPreference(
 				getResources().getString(R.string.Admin_Password));
-		admin_pw.setEnabled(true);
+		admin_pw.setEnabled(true);*/
+
+		PreferenceScreen admin_pw = (PreferenceScreen) findPreference("Admin_Password");
+		admin_pw.setEnabled(false);
 
 		PreferenceScreen SetBackgroundMeasurementMode = (PreferenceScreen) findPreference(
 				getResources().getString(R.string.SetBackgroundMeasurementMode));

@@ -204,6 +204,7 @@ public class MainBroadcastReceiver extends android.content.BroadcastReceiver {
 
 	public static final String MSG_STOP_HEALTH_ALARM = APPLICATION + ".toast.stop.health.alarm";
 	public static final String MSG_FIXED_GC_SEND = APPLICATION + ".toast.msg.fixed.gc.send";
+	public static final String MSG_FIXED_GC_SEND1 = APPLICATION + ".toast.msg.fixed.gc.send1";
 
 	@Override
 	public void onReceive(Context context, android.content.Intent intent) {

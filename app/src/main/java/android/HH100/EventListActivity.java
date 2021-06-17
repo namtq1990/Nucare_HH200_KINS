@@ -15,6 +15,7 @@ import android.HH100.Structure.NcLibrary;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,10 +25,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -41,7 +45,7 @@ import android.widget.Toast;
 
 import static android.HH100.Structure.NcLibrary.Separate_EveryDash3;
 
-public class EventListActivity extends Activity  implements AbsListView.OnScrollListener  {
+public class EventListActivity extends Activity  implements AbsListView.OnScrollListener {
 	private static final int CHOOSE_EVENT_FILE = 234124;
 
 	private Context mContext;
@@ -58,12 +62,12 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	ListView eventList;
 	EventDBOper mEventDB;
 	int selectId = -1;
-	String photoFile =  "";
+	String photoFile = "";
 
 	//180803 listview 페이징 처리
 	ProgressBar progressBar;
 	int currentPage = 0; // 페이징변수. 초기 값은 1 이다.
-	boolean lastItemVisibleFlag  = false; // 리스트 스크롤이 마지막 셀(맨 바닥)로 이동했는지 체크할 변수
+	boolean lastItemVisibleFlag = false; // 리스트 스크롤이 마지막 셀(맨 바닥)로 이동했는지 체크할 변수
 	boolean mLockListView = false; // 데이터 불러올때 중복안되게 하기위한 변수
 	final int OFFSET = 50;                  // 한 페이지마다 로드할 데이터 갯수.
 	int dbCount = 0; // eventdb 전체 count
@@ -71,16 +75,16 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	CheckBox chkReachBack; //리치백로그 호출
 	TextView actionBarTitle;
 
+	boolean clickChk = false; //핸들키로 누르면 2번눌리는 현상이있음..
+
 	@Override
-	protected void onResume()
-	{
+	protected void onResume() {
 
 		MainActivity.ActionViewExcuteCheck = Activity_Mode.UN_EXCUTE_MODE;
 
 
 		// 해당하는 인덱스로 스크롤 이동
-		if(arr !=null && arr.size() != 0)
-		{
+		if (arr != null && arr.size() != 0) {
 			eventList.smoothScrollToPosition(clickIndex);
 		}
 
@@ -89,8 +93,7 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -102,6 +105,7 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 
 		setContentView(R.layout.database);
 
+		MainActivity.ActionViewExcuteCheck = Activity_Mode.UN_EXCUTE_MODE;
 		MainActivity.ACTIVITY_STATE = Activity_Mode.EVENTLOG_LIST_MAIN;
 		mContext = EventListActivity.this;
 		progressBar = (ProgressBar) findViewById(R.id.progressbar);
@@ -131,13 +135,13 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 		actionBar.setCustomView(actionBarLayout);*/
 
 		LinearLayout actionBarLayout = new LinearLayout(EventListActivity.this);
-		actionBarLayout.setGravity(Gravity.CENTER_VERTICAL );
+		actionBarLayout.setGravity(Gravity.CENTER_VERTICAL);
 
 		LinearLayout.LayoutParams paramLLayoutBG = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		actionBarLayout.setLayoutParams(paramLLayoutBG);
 
 		LinearLayout.LayoutParams chk = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		chk.gravity = Gravity.CENTER_VERTICAL ;
+		chk.gravity = Gravity.CENTER_VERTICAL;
 		chk.weight = 1;
 		actionBarTitle = new TextView(EventListActivity.this);
 		actionBarTitle.setTextSize(16);
@@ -149,33 +153,30 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 
 		chk = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		chk.gravity = Gravity.CENTER_VERTICAL;
-		chk.setMargins(0,0,15,0);
+		chk.setMargins(0, 0, 15, 0);
 
 		chkReachBack = new CheckBox(EventListActivity.this);
 		chkReachBack.setText(getResources().getString(R.string.reachback_log));
-		chkReachBack.setTextColor(Color.rgb(51,	181,  229));
+		chkReachBack.setTextColor(Color.rgb(51, 181, 229));
 		chkReachBack.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
 
 		chkReachBack.setLayoutParams(chk);
 		actionBarLayout.addView(chkReachBack);
 		actionBar.setCustomView(actionBarLayout);
 		chkReachBack.setOnCheckedChangeListener(chkClick);
+		chkReachBack.setTag("ReachBack_Cheak");
 	}
 
 	// reachback failed  checkbox click Listener
-	private CompoundButton.OnCheckedChangeListener chkClick = new CompoundButton.OnCheckedChangeListener()
-	{
+	private CompoundButton.OnCheckedChangeListener chkClick = new CompoundButton.OnCheckedChangeListener() {
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			if (isChecked)
-			{
+			if (isChecked) {
 				currentPage = 0;
 				arr = new ArrayList<EventData>();
 				actionBarTitle.setText(getResources().getString(R.string.reachback_log));
 				LoadDBList(true, currentPage);
-			}
-			else
-			{
+			} else {
 				currentPage = 0;
 				arr = new ArrayList<EventData>();
 				actionBarTitle.setText(getResources().getString(R.string.event_log));
@@ -185,14 +186,11 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	};
 
 	// click Listener
-	private View.OnClickListener click = new View.OnClickListener()
-	{
+	private View.OnClickListener click = new View.OnClickListener() {
 		@Override
-		public void onClick(View view)
-		{
-			switch ((String) view.getTag())
-			{
-				case "actionBar" :
+		public void onClick(View view) {
+			switch ((String) view.getTag()) {
+				case "actionBar":
 					eventList.setSelection(0); //최상단으로 이동
 					break;
 			}
@@ -201,20 +199,17 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	};
 
 	//reachback log 호출
-	public void LoadDBList(boolean success, int page)
-	{
-		Log.e("ahn","LoadDBList");
+	public void LoadDBList(boolean success, int page) {
+		Log.e("ahn", "LoadDBList");
 		//List에 사용될 DB내용들 저장
 		arr = new ArrayList<EventData>();
-		try
-		{
-			Cursor cu = DBMng.GetInst(EventListActivity.this).loadAllReachBackDB(success,(page*OFFSET),OFFSET);
+		eventList.setTag("reachback");
+		try {
+			Cursor cu = DBMng.GetInst(EventListActivity.this).loadAllReachBackDB(success, (page * OFFSET), OFFSET);
 
-			if (cu.getCount() != 0)
-			{
+			if (cu.getCount() != 0) {
 
-				while (cu.moveToNext())
-				{
+				while (cu.moveToNext()) {
 					EventData Item = new EventData();
 					Item.Event_Number = Integer.parseInt(cu.getString(cu.getColumnIndex("_id")));
 					Item.Event_Date = cu.getString(cu.getColumnIndex("Date"));
@@ -232,26 +227,20 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 
 					String temp1 = "None";
 
-					for (int i = 0; i < IsoTemp.size(); i++)
-					{
+					for (int i = 0; i < IsoTemp.size(); i++) {
 						Isotope iso = new Isotope();
 						iso.Set_Result_OnlyDB_v1_5(IsoTemp.get(i));
 						tempIdentification.add(iso);
 						Item.Identification = new ArrayList<String>();
 
-						if (tempIdentification  != null && tempIdentification.size() != 0)
-						{
-							for (int k = 0; k <tempIdentification.size(); k++)
-							{
+						if (tempIdentification != null && tempIdentification.size() != 0) {
+							for (int k = 0; k < tempIdentification.size(); k++) {
 								temp1 = "";
-								if (k == tempIdentification.size() - 1)
-								{
+								if (k == tempIdentification.size() - 1) {
 									temp1 = tempIdentification.get(k).isotopes;
 									break;
-								}
-								else
-								{
-									temp1 =temp1+ tempIdentification.get(k).isotopes + ", ";
+								} else {
+									temp1 = temp1 + tempIdentification.get(k).isotopes + ", ";
 								}
 							}
 						}
@@ -266,46 +255,35 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 				eventList.setAdapter(rAdt);
 				rAdt.setOnListener(reachBackListClick);
 
-			}
-			else
-			{
-				if(currentPage != 0)
-				{
-					Toast.makeText(EventListActivity.this, getResources().getString(R.string.eventlog_load_failed),Toast.LENGTH_SHORT).show();
+			} else {
+				if (currentPage != 0) {
+					Toast.makeText(EventListActivity.this, getResources().getString(R.string.eventlog_load_failed), Toast.LENGTH_SHORT).show();
 					currentPage--;
 					eventList.setSelection(adt.getCount() - 1);
 
-				}
-				else
-				{
+				} else {
 					eventList.setAdapter(null);
 				}
 
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 
 	}
 
-	private ReachBackList_Adapter.clickListener reachBackListClick = new ReachBackList_Adapter.clickListener()
-	{
+	private ReachBackList_Adapter.clickListener reachBackListClick = new ReachBackList_Adapter.clickListener() {
 		@Override
-		public void onCellClick(String type, int id, int index, String xml, String pic, String date)
-		{
+		public void onCellClick(String type, int id, int index, String xml, String pic, String date) {
 			clickIndex = index;
-			Log.e("ahn","clickIndex : "+clickIndex);
-			if (type.equals("click"))
-			{
-				reSendReachBackDlg(index,id);
+			Log.e("ahn", "clickIndex : " + clickIndex);
+			if (type.equals("click")) {
+				reSendReachBackDlg(index, id);
 				return;
 			}
-			if (type.equals("longclick"))
-			{
-				re_deleteDlg(index,pic,xml,date);
+			if (type.equals("longclick")) {
+				re_deleteDlg(index, pic, xml, date);
 				return;
 			}
 
@@ -314,37 +292,29 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	};
 
 	//리치백 리스트 삭제
-	public void re_deleteDlg(final int _id, final String pic, final String xml, final String date)
-	{
+	public void re_deleteDlg(final int _id, final String pic, final String xml, final String date) {
 
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EventListActivity.this);
 		dialogBuilder.setTitle("리치백 로그");
 		dialogBuilder.setMessage("리치백 로그를 삭제하시겠습니까");
 		dialogBuilder.setPositiveButton("삭제",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton)
-					{
+					public void onClick(DialogInterface dialog, int whichButton) {
 
-						if(DBMng.GetInst(mContext).deleteReachBack(_id))
-						{
-							if(!pic.equals("") || pic !=null)
-							{
+						if (DBMng.GetInst(mContext).deleteReachBack(_id)) {
+							if (!pic.equals("") || pic != null) {
 								File f2d = new File(pic);
 								f2d.delete();
 							}
 
-							if(!xml.equals("") || xml !=null)
-							{
+							if (!xml.equals("") || xml != null) {
 								File f2d = new File(xml);
 								f2d.delete();
 							}
 
-							if(chkReachBack.isChecked())
-							{
-								LoadDBList( true,currentPage);
-							}
-							else
-							{
+							if (chkReachBack.isChecked()) {
+								LoadDBList(true, currentPage);
+							} else {
 								LoadDBList(0);
 							}
 						}
@@ -359,47 +329,37 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	}
 
 	//리치백 재전송 dlg
-	public void reSendReachBackDlg(final int index, final int id)
-	{
+	public void reSendReachBackDlg(final int index, final int id) {
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EventListActivity.this);
 		dialogBuilder.setTitle(getResources().getString(R.string.transmit_N42));
-		dialogBuilder.setMessage(getResources().getString(R.string.send_toRCBCenter_event1)+"\n"+ getResources().getString(R.string.event_log)+"(#"+id+")"+getResources().getString(R.string.send_toRCBCenter_event3)+"\n"
-				+getResources().getString(R.string.receive_email_address)+" "+MainActivity.mPrefDB.Get_recv_email());
+		dialogBuilder.setMessage(getResources().getString(R.string.send_toRCBCenter_event1) + "\n" + getResources().getString(R.string.event_log) + "(#" + id + ")" + getResources().getString(R.string.send_toRCBCenter_event3) + "\n"
+				+ getResources().getString(R.string.receive_email_address) + " " + MainActivity.mPrefDB.Get_recv_email());
 		dialogBuilder.setPositiveButton(getResources().getString(R.string.transmit),
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton)
-					{
+					public void onClick(DialogInterface dialog, int whichButton) {
 
-						if (!NcLibrary.isNetworkOnline(mContext))
-						{
+						if (!NcLibrary.isNetworkOnline(mContext)) {
 							EventDBOper mEventDB = new EventDBOper();
 							mEventDB.OpenDB();
 							EventData m_EventData = DBMng.GetInst(mContext).loadReachBackDB(index);
 							m_EventData.reachBackSuccess = false;
 							mEventDB.EndDB();
 
-							DBMng.GetInst(mContext).updateReachBack(m_EventData.idx, m_EventData.reachBackPic, m_EventData.reachBackXml, m_EventData.reachBackSuccess+"");
+							DBMng.GetInst(mContext).updateReachBack(m_EventData.idx, m_EventData.reachBackPic, m_EventData.reachBackXml, m_EventData.reachBackSuccess + "");
 
 							arr = new ArrayList<EventData>();
-							LoadDBList(true,currentPage);
+							LoadDBList(true, currentPage);
 
 							NcLibrary.Show_Dlg1(EventListActivity.this.getResources().getString(R.string.internet_not).toString(), EventListActivity.this);
-						}
-						else
-						{
+						} else {
 
 							EventData reachBack = null;
-							reachBack = NcLibrary.reSendEmail( true, mContext,index, true);
-							if(reachBack!=null)
-							{
-								if(DBMng.GetInst(mContext).updateReachBack(reachBack.idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess+""))
-								{
-									if(chkReachBack.isChecked())
-									{
+							reachBack = NcLibrary.reSendEmail(true, mContext, index, true);
+							if (reachBack != null) {
+								if (DBMng.GetInst(mContext).updateReachBack(reachBack.idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess + "")) {
+									if (chkReachBack.isChecked()) {
 										LoadDBList(true, currentPage);
-									}
-									else
-									{
+									} else {
 										LoadDBList(0);
 									}
 
@@ -421,18 +381,17 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 	}
 
 
-	public void LoadDBList(int page)
-	{
+	public void LoadDBList(int page) {
 		//List에 사용될 DB내용들 저장
 		try {
 			mEventDB = new EventDBOper();
 			mEventDB.OpenDB();
-			dbCount = (int)mEventDB.getEventDBCount();
+			dbCount = (int) mEventDB.getEventDBCount();
+			eventList.setTag("event");
 
-			Cursor cu = mEventDB.LoadEventList(page*OFFSET,OFFSET);
+			Cursor cu = mEventDB.LoadEventList(page * OFFSET, OFFSET);
 
-			if (cu.getCount() != 0)
-			{
+			if (cu.getCount() != 0) {
 
 				while (cu.moveToNext()) {
 					EventData Item = new EventData();
@@ -449,25 +408,20 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 					Vector<String> IsoTemp = NcLibrary.Separate_EveryDash2(temp, '|');
 
 					String temp1 = "None";
-					for (int i = 0; i < IsoTemp.size(); i++)
-					{
+					for (int i = 0; i < IsoTemp.size(); i++) {
 						Isotope iso = new Isotope();
 						iso.Set_Result_OnlyDB_v1_5(IsoTemp.get(i));
 						ArrayList<Isotope> tempIdentification = new ArrayList<Isotope>();
 						tempIdentification.add(iso);
 
-						if (tempIdentification != null && tempIdentification.size() != 0)
-						{
+						if (tempIdentification != null && tempIdentification.size() != 0) {
 							temp1 = "";
-							for (int k = 0; k < tempIdentification.size(); k++)
-							{
-								if (k == tempIdentification.size() - 1)
-								{
+							for (int k = 0; k < tempIdentification.size(); k++) {
+								if (k == tempIdentification.size() - 1) {
 									temp1 = tempIdentification.get(k).isotopes;
 									Item.Identification.add(temp1);
 									break;
-								} else
-								{
+								} else {
 									temp1 = temp1 + tempIdentification.get(k).isotopes + ", ";
 									Item.Identification.add(temp1);
 								}
@@ -485,18 +439,13 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 				adt = new EventList_Adapter(EventListActivity.this, arr);
 				eventList.setAdapter(adt);
 				adt.setOnListener(onListCellClick);
-				eventList.setSelection( (currentPage*OFFSET)-1);
-			}
-			else
-			{
-				if(currentPage != 0)
-				{
-					Toast.makeText(EventListActivity.this, getResources().getString(R.string.eventlog_load_failed),Toast.LENGTH_SHORT).show();
+				eventList.setSelection((currentPage * OFFSET) - 1);
+			} else {
+				if (currentPage != 0) {
+					Toast.makeText(EventListActivity.this, getResources().getString(R.string.eventlog_load_failed), Toast.LENGTH_SHORT).show();
 					currentPage--;
 					eventList.setSelection(adt.getCount() - 1);
-				}
-				else
-				{
+				} else {
 					eventList.setAdapter(null);
 				}
 			}
@@ -506,6 +455,189 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 
 
 	}
+
+
+/*	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		NcLibrary.SaveText("onKeyDown"+keyCode+" \n");
+	switch (keyCode)
+		{
+
+
+			case KeyEvent.KEYCODE_ENTER:
+				NcLibrary.SaveText("KEYCODE_ENTER \n");
+				Intent intent = new Intent(EventListActivity.this, LogTabActivity.class);
+				intent.putExtra("_id", 1);
+				startActivity(intent);
+				return false;
+
+				//break;
+
+
+		}
+		return super.onKeyDown(keyCode, event);
+	}*/
+
+@Override
+public boolean dispatchKeyEvent(KeyEvent event)
+{
+	int[] coordinates = new int[2];
+	long downTime = 0;
+	long eventTime = 0;
+	MotionEvent down_event, up_event;
+	try
+	{
+		getCurrentFocus().getLocationOnScreen(coordinates);
+	}
+	catch (NullPointerException e)
+	{
+		return super.dispatchKeyEvent(event);
+	}
+
+	//getCurrentFocus().getLocationOnScreen(coordinates);
+	if(coordinates[1]<10) //상단 리치백로그 인지 판단
+	{
+		return super.dispatchKeyEvent(event);
+	}
+	else
+	{
+		if(!clickChk)
+		{
+			clickChk = true;
+			switch (event.getKeyCode())
+			{
+				case KeyEvent.KEYCODE_ENTER :
+					eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+					downTime = SystemClock.uptimeMillis();
+					eventTime = SystemClock.uptimeMillis();
+					down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0],coordinates[1], 0);
+					up_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP,  coordinates[0],coordinates[1], 0);
+					eventList.dispatchTouchEvent(down_event);
+					eventList.dispatchTouchEvent(up_event);
+					return false;
+
+				case KeyEvent.KEYCODE_POWER: //longclick 일때
+
+					eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+					downTime = SystemClock.uptimeMillis();
+					eventTime = SystemClock.uptimeMillis();
+					down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0],coordinates[1], 0);
+					eventList.dispatchTouchEvent(down_event);
+					return false;
+			}
+
+		}
+		else
+		{
+			clickChk = false;
+		}
+
+		return super.dispatchKeyEvent(event);
+	}
+
+/*	if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+	{
+		int[] coordinates = new int[2];
+		eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+		long downTime = SystemClock.uptimeMillis();
+		long eventTime = SystemClock.uptimeMillis();
+		MotionEvent down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0],coordinates[1], 0);
+		MotionEvent up_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP,  coordinates[0],coordinates[1], 0);
+		eventList.dispatchTouchEvent(down_event);
+		eventList.dispatchTouchEvent(up_event);
+
+		return false;
+	}
+
+	if (event.getKeyCode() == KeyEvent.KEYCODE_POWER)
+	{
+		int[] coordinates = new int[2];
+		eventList.getSelectedView().getLocationOnScreen(coordinates);
+
+		long downTime = SystemClock.uptimeMillis();
+		long eventTime = SystemClock.uptimeMillis()+1000;
+		MotionEvent down_event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, coordinates[0],coordinates[1], 0);
+		eventList.dispatchTouchEvent(down_event);
+
+		return false;
+	}*/
+
+	//return super.dispatchKeyEvent(event);
+}
+
+
+	//cView.dispatchTouchEvent(event);
+
+	//eventList.performClick();
+/*		switch (event.getKeyCode())
+		{
+
+			case KeyEvent.KEYCODE_ENTER:
+				NcLibrary.SaveText("KEYCODE_ENTER \n");
+				Intent intent = new Intent(EventListActivity.this, LogTabActivity.class);
+				intent.putExtra("_id", 1);
+				startActivity(intent);
+				return false;
+
+			//break;
+
+
+		}*/
+
+		//return super.dispatchKeyEvent(event);
+
+/*		NcLibrary.SaveText("dispatchKeyEventdispatchKeyEvent\n");
+		if (event.getAction() == KeyEvent.ACTION_DOWN) {
+			// keydown logic
+			NcLibrary.SaveText("dispatchKeyEvent\n");
+			NcLibrary.SaveText("event  "+event+"\n");
+
+
+		}
+		if(event.getAction() == KeyEvent.KEYCODE_ENTER)
+		{
+			NcLibrary.SaveText("dispatchKeyEvent KEYCODE_ENTER\n");
+			Toast.makeText(EventListActivity.this,"dispatchKeyEvent KEYCODE_ENTER",Toast.LENGTH_LONG).show();
+			return false;
+		}
+
+		if(event.getAction() == KeyEvent.KEYCODE_VOLUME_DOWN)
+		{
+			NcLibrary.SaveText("dispatchKeyEvent KEYCODE_ENTERR\n");
+			return false;
+		}*/
+
+
+/*
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+
+		NcLibrary.SaveText("dispatchKeyEventdispatchKeyEvent\n");
+		if (event.getAction() == KeyEvent.ACTION_DOWN) {
+			// keydown logic
+			NcLibrary.SaveText("dispatchKeyEvent\n");
+			NcLibrary.SaveText("event  "+event+"\n");
+
+
+		}
+		if(event.getAction() == KeyEvent.KEYCODE_ENTER)
+		{
+			NcLibrary.SaveText("dispatchKeyEvent KEYCODE_ENTER\n");
+			Toast.makeText(EventListActivity.this,"dispatchKeyEvent KEYCODE_ENTER",Toast.LENGTH_LONG).show();
+			return false;
+		}
+
+		if(event.getAction() == KeyEvent.KEYCODE_VOLUME_DOWN)
+		{
+			NcLibrary.SaveText("dispatchKeyEvent KEYCODE_ENTERR\n");
+			return false;
+		}
+		return super.dispatchKeyEvent(event);
+	}*/
+
 
 	//clickListener
 	private EventList_Adapter.clickListener onListCellClick = new EventList_Adapter.clickListener()
@@ -517,10 +649,20 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 			Log.e("ahn", "clickIndex : " + clickIndex);
 			if (type.equals("click"))
 			{
-				Intent intent = new Intent(EventListActivity.this, LogTabActivity.class);
-				intent.putExtra("_id", id);
-				startActivity(intent);
-				return;
+				try
+				{
+					//NcLibrary.SaveText("clickIndex  "+id+"\n");
+					Intent intent = new Intent(EventListActivity.this, LogTabActivity.class);
+					intent.putExtra("_id", id);
+					startActivity(intent);
+
+				//	return;
+				}catch (Exception e)
+				{
+					//NcLibrary.SaveText("click Exception\n");
+					NcLibrary.Write_ExceptionLog(e);
+				}
+
 			}
 			if (type.equals("longclick"))
 			{
@@ -534,7 +676,7 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 					EventData m_EventData = mEventDB.LoadEventDB(selectId);
 					mEventDB.EndDB();
 					int idx = DBMng.GetInst(EventListActivity.this).loadReahBackDB(m_EventData.Event_Date, m_EventData.StartTime);
-					if (idx == -1)
+					if (idx <= 0)
 					{
 						m_EventData.reachBackSuccess = false;
 						DBMng.GetInst(mContext).writeReachBackDB(m_EventData);
@@ -615,7 +757,8 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 					mEventDB.EndDB();
 */
 
-				EventData reachBack = NcLibrary.SendEmail( false,EventListActivity.this,  selectId,true);
+                    NcLibrary.SendEmail( false,EventListActivity.this,  selectId,true);
+			/*	EventData reachBack = NcLibrary.SendEmail( false,EventListActivity.this,  selectId,true);
 					if(reachBack!=null)
 					{
 						int idx = DBMng.GetInst(EventListActivity.this).loadReahBackDB(reachBack.Event_Date, reachBack.StartTime);
@@ -627,8 +770,7 @@ public class EventListActivity extends Activity  implements AbsListView.OnScroll
 						{
 							DBMng.GetInst(EventListActivity.this).updateReachBack(idx, reachBack.reachBackPic, reachBack.reachBackXml, reachBack.reachBackSuccess+"");
 						}
-					}
-				//	LoadDBList(currentPage);
+					}*/
 				}
 		//	}
 			//super.onActivityResult(requestCode, resultCode, data);

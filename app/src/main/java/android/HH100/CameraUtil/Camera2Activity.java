@@ -150,14 +150,14 @@ TextureView mTextureView;
         mViewDark0 = (View) mainLayout.findViewById(R.id.view_camera_dark0);
         mViewDark1 = (LinearLayout) mainLayout.findViewById(R.id.view_camera_dark1);
 
-         inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater1 = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         resultLayout = (RelativeLayout) inflater1.inflate(R.layout.camera2activity_pictures, null);
         imgResult = (ImageView) resultLayout.findViewById(R.id.IDIMG_RESULT);
         btnRetry = (Button) resultLayout.findViewById(R.id.IDBTN_RETRY);
         btnOk = (Button) resultLayout.findViewById(R.id.IDBTN_OK);
         btnRetry.setOnClickListener(btnClick);
         btnOk.setOnClickListener(btnClick);
-      //  mTextureView.setOnTouchListener(this);
+        //  mTextureView.setOnTouchListener(this);
 
         if(getIntent().getStringExtra("email").equals("T"))
         {
@@ -348,7 +348,7 @@ TextureView mTextureView;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        NcLibrary.SaveText("onKeyDown \n");
+        //NcLibrary.SaveText("onKeyDown \n");
         switch (keyCode)
         {
 
@@ -357,7 +357,7 @@ TextureView mTextureView;
                 break;
 
             case KeyEvent.KEYCODE_ENTER:
-                NcLibrary.SaveText("KEYCODE_ENTER \n");
+                //NcLibrary.SaveText("KEYCODE_ENTER \n");
                 if(!isAddView)
                 {
                     takePicture();
@@ -395,7 +395,7 @@ TextureView mTextureView;
                     mIvCameraButton.setFocusable(true);
                     mIvCameraButton.requestFocus();
                     mIvCameraButton.setFocusableInTouchMode(true);
-                   ((ViewGroup) resultLayout.getParent()).removeView(resultLayout);
+                    ((ViewGroup) resultLayout.getParent()).removeView(resultLayout);
                     //mainLayout.removeAllViews();
                     break;
 
@@ -404,7 +404,7 @@ TextureView mTextureView;
                     {
                         tempFile.delete();
                     }
-                   finish();
+                    finish();
                     break;
 
 
@@ -951,7 +951,6 @@ TextureView mTextureView;
                     try {
                         // Auto focus should be continuous for camera preview.
                         mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                        // Flash is automatically enabled when necessary.
                         setAutoFlash(mPreviewRequestBuilder);
 
                         // Finally, we start displaying the camera preview.
@@ -1014,11 +1013,10 @@ TextureView mTextureView;
      */
     void takePicture()
     {
-        MediaPlayer cameraSound = MediaPlayer.create(this, R.raw.camera_click);
-        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 20, 0);
-        //cameraSound.setVolume(100, 100);
-        cameraSound.start();
+
+        MainActivity.mAlarmSound = MediaPlayer.create(Camera2Activity.this, R.raw.camera_click);
+        MainActivity.mAlarmSound.setVolume(100, 100);
+        MainActivity.mAlarmSound.start();
 
 
         if(touch)
@@ -1040,7 +1038,7 @@ TextureView mTextureView;
         {
             lockFocus();
         }
-       //
+        //
     }
 
     /**
@@ -1058,7 +1056,7 @@ TextureView mTextureView;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback, mBackgroundHandler);
         } catch (Exception e) {
             e.printStackTrace();
-          //  unlockFocus();
+            //  unlockFocus();
 
         }
     }
@@ -1152,8 +1150,8 @@ TextureView mTextureView;
         /**
          * 카메라가 자동 온 / 오프 플래시를 지원하면 플래시를 사용하십시오. 그렇지 않으면 플래시가 항상 꺼집니다.
          */
-        if (mFlashSupported)
-            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+/*        if (mFlashSupported)
+            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);*/
     }
 
     /**
@@ -1183,7 +1181,7 @@ TextureView mTextureView;
         {
             //사진저장
             mFinishCalled = true;
-             tempFile = new File(Environment.getExternalStorageDirectory().getPath() + "/temp.jpg");
+            tempFile = new File(Environment.getExternalStorageDirectory().getPath() + "/temp.jpg");
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
@@ -1202,7 +1200,7 @@ TextureView mTextureView;
 
                 //잘린 이미지로 최종 저장
                 tempBitmap = BitmapUtils.compressToResolution(tempFile, 1920 * 1080);
-                 //tempBitmap = BitmapUtils.crop(tempBitmap);
+                //tempBitmap = BitmapUtils.crop(tempBitmap);
 
                 OutputStream out = null;
                 try
@@ -1294,8 +1292,8 @@ TextureView mTextureView;
             {
                 isAddView = true;
                 mIvCameraButton.setFocusable(false);
-               addContentView(resultLayout, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-              Glide.with(Camera2Activity.this).asBitmap().load(tempBitmap).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).thumbnail(1.0f).into(imgResult);
+                addContentView(resultLayout, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                Glide.with(Camera2Activity.this).asBitmap().load(tempBitmap).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).thumbnail(1.0f).into(imgResult);
             }
         }
 

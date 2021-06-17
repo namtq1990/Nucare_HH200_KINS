@@ -153,6 +153,7 @@ public class LogEventInfo extends Fragment
 
     };
 
+
 /*    //리치백 재전송
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

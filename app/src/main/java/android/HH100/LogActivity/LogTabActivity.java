@@ -7,6 +7,7 @@ import android.HH100.Structure.NcLibrary;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TabHost;
@@ -42,7 +45,10 @@ public class LogTabActivity extends FragmentActivity implements Serializable
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		//NcLibrary.SaveText("onCreate\n");
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		//NcLibrary.SaveText("onCreate \n");
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		setContentView(R.layout.eventlog_tab);
 		
@@ -55,10 +61,13 @@ public class LogTabActivity extends FragmentActivity implements Serializable
 
 
 		int id  = getIntent().getIntExtra("_id",0);
+		//NcLibrary.SaveText("_id\n");
+
 		arr = new ArrayList<EventData>();
 		try
 		{
-			EventDBOper mEventDB = new EventDBOper();
+			//NcLibrary.SaveText("EventDBOper\n");
+		EventDBOper mEventDB = new EventDBOper();
 			mEventDB.OpenDB();
 			Item = mEventDB.LoadEventDB(id);
 			if (Item != null)
@@ -66,7 +75,6 @@ public class LogTabActivity extends FragmentActivity implements Serializable
 				tabEventID = new LogEventID(android.HH100.LogActivity.LogTabActivity.this, Item);
 				tabEventInfo = new LogEventInfo(android.HH100.LogActivity.LogTabActivity.this, Item);
 				tabEventPic = new LogEventPic(android.HH100.LogActivity.LogTabActivity.this, Item);
-
 
 				adtPager = new pagerAdapter(getSupportFragmentManager());
 				mPagerEvent.setAdapter(adtPager);
@@ -84,8 +92,31 @@ public class LogTabActivity extends FragmentActivity implements Serializable
 
 	}
 
+/*
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
 
-	ViewPager.SimpleOnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener()
+	}
+
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+
+		//NcLibrary.SaveText("Log dispatchKeyEvent : "+event.getKeyCode()+"\n");
+		switch (event.getKeyCode())
+		{
+			case KeyEvent.KEYCODE_BACK:
+				onBackPressed();
+				return false;
+		}
+		return super.dispatchKeyEvent(event);
+	}
+*/
+
+
+		ViewPager.SimpleOnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener()
 	{
 		@Override
 		public void onPageSelected(int position)
@@ -152,8 +183,8 @@ public class LogTabActivity extends FragmentActivity implements Serializable
 				Fragment fragment    = (Fragment)object;
 				FragmentManager fm    = fragment.getFragmentManager();
 				FragmentTransaction ft    = fm.beginTransaction();
-				//ft.commitAllowingStateLoss();
-				//ft.remove(fragment);
+			//	ft.commitAllowingStateLoss();
+			//	ft.remove(fragment);
 				ft.commitAllowingStateLoss();
 			}
 		}
