@@ -54,6 +54,7 @@ import android.HH100.Structure.ReadDetectorData;
 import android.HH100.Structure.SingleMediaScanner;
 import android.HH100.Structure.Spectrum;
 import android.HH100.Structure.Detector.HwPmtProperty_Code;
+import android.HH100.config.Config;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -1559,15 +1560,15 @@ public class MainActivity extends TabActivity
 
 
 
+		mPrefDB.Set_sender_Server(Config.Mail.MAIL_SERVER);
+		mPrefDB.Set_sender_Port(Config.Mail.MAIL_PORT);
+		mPrefDB.Set_sender_pw(Config.Mail.MAIL_PASSWD);
+		mPrefDB.Set_sender_email(Config.Mail.MAIL_ACCOUNT);
 
 		//맨처음 깔았을때 이메일 변경
 		if (mPrefDB.Get_EmailFirst().equals("Y"))
 		{
-			mPrefDB.Set_sender_Server("mail.nucaremed.com");
-			mPrefDB.Set_sender_Port("587");
-			mPrefDB.Set_sender_pw("dksdlstjs233");
-			mPrefDB.Set_sender_email("inseon.ahn@nucaremed.com");
-			mPrefDB.Set_recv_address("nucare@nucaremed.com");
+			mPrefDB.Set_recv_address(Config.Mail.MAIL_RECEIVER);
 
 			mPrefDB.Set_EmailFirst("N");
 		}
@@ -5521,12 +5522,11 @@ public void Start_locationUpdates() {
 
 			if (mEmailName == null || mEmailName.equals(""))
 			{
-				mPrefDB.Set_sender_Server("mail.nucaremed.com");
-				mPrefDB.Set_sender_Port("587");
-				mPrefDB.Set_sender_pw("dksdlstjs233");
-				mPrefDB.Set_sender_email("inseon.ahn@nucaremed.com");
-				mPrefDB.Set_recv_address("nucare@nucaremed.com");
-
+				mPrefDB.Set_sender_Server(Config.Mail.MAIL_SERVER);
+				mPrefDB.Set_sender_Port(Config.Mail.MAIL_PORT);
+				mPrefDB.Set_sender_pw(Config.Mail.MAIL_PASSWD);
+				mPrefDB.Set_sender_email(Config.Mail.MAIL_ACCOUNT);
+				mPrefDB.Set_recv_address(Config.Mail.MAIL_RECEIVER);
 			}
 
 		} catch (Exception e) {

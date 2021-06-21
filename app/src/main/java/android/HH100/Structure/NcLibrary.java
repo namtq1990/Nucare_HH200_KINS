@@ -48,6 +48,7 @@ import android.HH100.DB.PreferenceDB;
 import android.HH100.Identification.Isotope;
 import android.HH100.R;
 import android.HH100.ReachBackListActivity;
+import android.HH100.config.Config;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -116,17 +117,17 @@ public class NcLibrary {
 				mPrgDlg.setMessage("오류내역을 전송중입니다 \n잠시만 기다려주세요");
 				mPrgDlg.show();
 
-				Thread thread = new Thread() 
+				Thread thread = new Thread()
 				{
 					@Override
 					public void run() {
 						super.run();
 
-						String sender = "inseon.ahn@nucaremed.com";
-						String sender_pw = "dksdlstjs233";
-						String sender_server = "mail.nucaremed.com";
-						String sender_port = "587";
-						String recv_mail = "inseon.ahn@nucaremed.com";
+						String sender = Config.Mail.MAIL_ACCOUNT;
+						String sender_pw = Config.Mail.MAIL_PASSWD;
+						String sender_server = Config.Mail.MAIL_SERVER;
+						String sender_port = Config.Mail.MAIL_PORT;
+						String recv_mail = Config.Mail.MAIL_RECEIVER;
 
 						SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
 						String mLastUser = pref.getString(mContext.getResources().getString(R.string.last_user),"None");
@@ -145,43 +146,43 @@ public class NcLibrary {
 						m.setFrom(sender);
 						m.setSubject("SAM III PeakAbout - System Log Data ( PeakAbout III " + Get_AppVersion(mContext) + ")");
 						m.setBody("From System Log" + "\n사용자 : " + mLastUser + "\n측정장소 : " + location + "\n최근 사용 일시 : "+ time);
-						try 
+						try
 						{
 							final File file = new File(path);
-							if (file.exists()) 
+							if (file.exists())
 							{
 								//Toast.makeText(mContext, "저장된 오류내역이 없습니다!", Toast.LENGTH_LONG).show();
 								m.addAttachment(path, "SystemLog.txt");
 							}
-							
+
 							String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SAM/DB_Version.txt";
 							File file1 = new File(path1);
-							if (file1.exists()) 
+							if (file1.exists())
 							{
 								m.addAttachment(path1, "DB_Version.txt");
-							}			
+							}
 							file1 = null;
 							path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SAM/DeviceName.txt";
 							file1 = new File(path1);
-							if (file1.exists()) 
+							if (file1.exists())
 							{
 								m.addAttachment(path1, "DeviceName.txt");
-							}	
+							}
 							file1 = null;
 							path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SAM/NormalDB.sql";
 							file1 = new File(path1);
-							if (file1.exists()) 
+							if (file1.exists())
 							{
 								m.addAttachment(path1, "NormalDB.sql");
 							}
 							file1 = null;
 							path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SAM/EventDB.sql";
 							file1 = new File(path1);
-							if (file1.exists()) 
+							if (file1.exists())
 							{
 								m.addAttachment(path1, "EventDB.sql");
-							}			
-																	
+							}
+
 							if (m.send()) {
 								// Toast.makeText(mContext,, Toast.LENGTH_LONG).show();
 
@@ -189,7 +190,7 @@ public class NcLibrary {
 								msg = "전송완료되었습니다";
 								Log.v("Forgot Password mail", "Success");
 
-								if (file.exists()) 
+								if (file.exists())
 								{
 									file.delete();
 								}
@@ -3655,19 +3656,18 @@ public class NcLibrary {
 						if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1)
 								|| (recv_mail == null || recv_mail.length() <= 1)
 								|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
-							sender = "inseon.ahn@nucaremed.com";
-							sender_pw = "dksdlstjs233";
-							recv_mail = "nucare@nucaremed.com";
-							sender_server = "mail.nucaremed.com";
-							sender_port = "587";
+							sender = Config.Mail.MAIL_ACCOUNT;
+							sender_pw = Config.Mail.MAIL_PASSWD;
+							recv_mail = Config.Mail.MAIL_RECEIVER;
+							sender_server = Config.Mail.MAIL_SERVER;
+							sender_port = Config.Mail.MAIL_PORT;
 
-							
-							pref.Set_sender_Server("mail.nucaremed.com");
-							pref.Set_sender_Port("587");
-							pref.Set_sender_pw("dksdlstjs233");
-							pref.Set_sender_email("inseon.ahn@nucaremed.com");
-							pref.Set_recv_address("nucare@nucaremed.com");
-							
+							pref.Set_sender_Server(sender_server);
+							pref.Set_sender_Port(sender_port);
+							pref.Set_sender_pw(sender_pw);
+							pref.Set_sender_email(sender);
+							pref.Set_recv_address(recv_mail);
+
 
 						}
 						
@@ -3864,17 +3864,17 @@ public class NcLibrary {
 
 					if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1) || (recv_mail == null || recv_mail.length() <= 1)
 							|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
-						sender = "inseon.ahn@nucaremed.com";
-						sender_pw = "dksdlstjs233";
-						recv_mail = "nucare@nucaremed.com";
-						sender_server = "mail.nucaremed.com";
-						sender_port = "587";
+						sender = Config.Mail.MAIL_ACCOUNT;
+						sender_pw = Config.Mail.MAIL_PASSWD;
+						recv_mail = Config.Mail.MAIL_RECEIVER;
+						sender_server = Config.Mail.MAIL_SERVER;
+						sender_port = Config.Mail.MAIL_PORT;
 
-						pref.Set_sender_Server("mail.nucaremed.com");
-						pref.Set_sender_Port("587");
-						pref.Set_sender_pw("dksdlstjs233");
-						pref.Set_sender_email("inseon.ahn@nucaremed.com");
-						pref.Set_recv_address("nucare@nucaremed.com");
+						pref.Set_sender_Server(sender_server);
+						pref.Set_sender_Port(sender_port);
+						pref.Set_sender_pw(sender_pw);
+						pref.Set_sender_email(sender);
+						pref.Set_recv_address(recv_mail);
 					}
 
 					final Mail m = new Mail(sender, sender_pw, sender_server, sender_port);
@@ -4092,16 +4092,16 @@ public class NcLibrary {
 
 					if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1) || (recv_mail == null || recv_mail.length() <= 1)
 							|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
-						sender = "inseon.ahn@nucaremed.com";
-						sender_pw = "dksdlstjs233";
-						recv_mail = "nucare@nucaremed.com";
-						sender_server = "mail.nucaremed.com";
-						sender_port = "587";
+						sender = Config.Mail.MAIL_ACCOUNT;
+						sender_pw = Config.Mail.MAIL_PASSWD;
+						recv_mail = Config.Mail.MAIL_RECEIVER;
+						sender_server = Config.Mail.MAIL_SERVER;
+						sender_port = Config.Mail.MAIL_PORT;
 
-						pref.Set_sender_Server("mail.nucaremed.com");
-						pref.Set_sender_Port("587");
-						pref.Set_sender_pw("dksdlstjs233");
-						pref.Set_sender_email("inseon.ahn@nucaremed.com");
+						pref.Set_sender_Server(sender_server);
+						pref.Set_sender_Port(sender_port);
+						pref.Set_sender_pw(sender_pw);
+						pref.Set_sender_email(sender);
 						pref.Set_recv_address("nucare@nucaremed.com");
 					}
 
@@ -4311,18 +4311,18 @@ public class NcLibrary {
 						if ((sender == null || sender.length() <= 1) || (sender_pw == null || sender_pw.length() <= 1)
 								|| (recv_mail == null || recv_mail.length() <= 1)
 								|| (sender_server == null || sender_server.length() <= 1) || (sender_port == null || sender_port.length() <= 1)) {
-							sender = "inseon.ahn@nucaremed.com";
-							sender_pw = "dksdlstjs233";
-							recv_mail = "nucare@nucaremed.com";
-							sender_server = "mail.nucaremed.com";
-							sender_port = "587";
+							sender = Config.Mail.MAIL_ACCOUNT;
+							sender_pw = Config.Mail.MAIL_PASSWD;
+							recv_mail = Config.Mail.MAIL_RECEIVER;
+							sender_server = Config.Mail.MAIL_SERVER;
+							sender_port = Config.Mail.MAIL_PORT;
 
-							pref.Set_sender_Server("mail.nucaremed.com");
-							pref.Set_sender_Port("587");
-							pref.Set_sender_pw("dksdlstjs233");
-							pref.Set_sender_email("inseon.ahn@nucaremed.com");
-							pref.Set_recv_address("nucare@nucaremed.com");
-							
+							pref.Set_sender_Server(sender_server);
+							pref.Set_sender_Port(sender_port);
+							pref.Set_sender_pw(sender_pw);
+							pref.Set_sender_email(sender);
+							pref.Set_recv_address(recv_mail);
+
 
 						}
 					

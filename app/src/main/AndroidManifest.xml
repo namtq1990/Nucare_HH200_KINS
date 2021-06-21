@@ -4,7 +4,7 @@
     package="android.HH100"
     android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="2.0.9" >
+    android:versionName="2.0.10" >
 
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />

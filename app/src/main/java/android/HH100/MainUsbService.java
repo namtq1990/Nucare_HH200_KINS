@@ -512,12 +512,14 @@ public class MainUsbService {
 								mReadData.GM = GM;
 								mReadData.isRealTime = true;
 								mReadData.mHighVoltage = hv;
+								mReadData.mRealTime = secondRealTime;
+								mReadData.time = secondRealTime1;
 								//mReadData.mRealTime = secondRealTime;
 								//mReadData.time = secondRealTime1;
 
 //								isPacketError = true;
 //								spectrumBuffer = new byte[5000];
-//								SystemClock.sleep( 50 );
+							SystemClock.sleep( 200 );
 								mSuperHandler.obtainMessage(MainActivity.MESSAGE_READ_DETECTOR_DATA_J3, 0, 0, mReadData).sendToTarget();
 
 
@@ -983,6 +985,16 @@ public class MainUsbService {
 				abdeInt = buffer[3088] & 0xff;
 				abdeInt1 = buffer[3089] & 0xff;
 				Battery = ((char) abdeInt * 0x100 + ((char) abdeInt1));
+
+				int time1 = buffer[3090] & 0xff;
+				int time2 = buffer[3091] & 0xff;
+				secondRealTime1 = ((char) time1 * 0x100 + ((char) time2));
+				secondRealTime = (int) Math.round(((secondRealTime1 / 1000) * 10) / 10);
+				if (secondRealTime <= 0) {
+					// TODO
+					secondRealTime = 1;
+					secondRealTime1 = 1000; // Millisecond
+				}
 
 			} catch (NumberFormatException e) {
 				NcLibrary.Write_ExceptionLog(e);
