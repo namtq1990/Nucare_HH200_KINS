@@ -604,6 +604,11 @@ public class SpectrumView extends View {
 					Vally.add(targetIsotopes.get(k).ListPeakDrawEn.get(i));
 				}
 
+				//20.03.05
+				if(targetIsotopes.get(k).ListPeakDrawEn!=null){
+					targetIsotopes.get(k).ListPeakDrawEn.clear();
+				}
+
 				/*
 				 * if(targetIsotopes.get(k).Energy1 !=
 				 * 0)Energys.add(targetIsotopes.get(k).Energy1);

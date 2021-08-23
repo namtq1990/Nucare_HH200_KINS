@@ -2128,6 +2128,12 @@ public class IsotopesLibrary {
 		{
 			//Step 1: Reset memory
 			SourceInfo = mSel_Library.get(i);
+			if (SourceInfo.ListPeakDrawEn != null) {
+				SourceInfo.ListPeakDrawEn.clear();
+			}
+			if (SourceInfo.ListPeakDrawBR != null) {
+				SourceInfo.ListPeakDrawBR.clear();
+			}
 
 			/*
 				if(SourceInfo.FoundPeaks.size()>0)
